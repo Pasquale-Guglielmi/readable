@@ -3,7 +3,7 @@
  */
 import $ from 'jquery';
 
-/* THIS IS THE POSTS APIs */
+/* CATEGORIES APIs */
 
 export function getCategories () {
     return $.ajax({
@@ -19,6 +19,8 @@ export function getCategoryPosts (category) {
         headers: { 'Authorization': 'whatever-you-want' },
     })
 }
+
+/* THIS IS THE POSTS APIs */
 
 export function getPosts() {
     return $.ajax({
