@@ -1,7 +1,8 @@
 /**
  * Created by pasquale on 26/08/2017.
  */
-import {GET_CATEGORIES, ERROR, LOADING} from '../actions/categories'
+import {GET_CATEGORIES} from '../actions/categories'
+import {ERROR, LOADING} from '../actions/loading'
 import { combineReducers } from 'redux';
 
 function isLoading(state = {loading: false}, action) {
