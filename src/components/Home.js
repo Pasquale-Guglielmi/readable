@@ -1,6 +1,7 @@
 /**
  * Created by pasquale on 26/08/2017.
  */
+import '../styles/home.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';

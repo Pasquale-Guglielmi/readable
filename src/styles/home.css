@@ -1,0 +1,26 @@
+.categories {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    padding: 2em;
+    margin: 0;
+    text-transform: uppercase;
+    background-color: #333;
+    font-size: 1.2em;
+}
+
+a,
+.category {
+    color: #eee;
+    cursor: auto;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #2bc;
+}
+
+.loading {
+    align-self: center;
+    margin: 0 auto;
+}

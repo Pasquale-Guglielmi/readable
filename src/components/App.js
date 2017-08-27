@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../App.css';
+import '../styles/App.css';
 import Home from './Home';
 import { Route } from 'react-router-dom';
 import * as Api from '../utils/Api';

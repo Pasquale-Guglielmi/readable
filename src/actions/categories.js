@@ -43,16 +43,19 @@ export function fetchCategories() {
         return Api.getCategories().then(
             data => {
                 dispatch(categories(data))
-                dispatch(isLoading(false));
+                dispatch(isLoading(false))
             },
-            error => dispatch(loadingError())
+            error => {
+                dispatch(loadingError())
+                dispatch(isLoading(false))
+            }
         )
     }
 }
 
 export function fetchCategoryPosts(category) {
     return function (dispatch) {
-        dispatch(isLoading())
+        dispatch(isLoading(true))
         return Api.getCategoryPosts(category).then(
             data => {
                 dispatch(categoryPosts(data))},
