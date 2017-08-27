@@ -1,15 +1,26 @@
 /**
  * Created by pasquale on 26/08/2017.
  */
-import {GET_CATEGORIES, CATEGORY_POSTS} from '../actions/categories'
+import {GET_CATEGORIES, ERROR} from '../actions/categories'
 import { combineReducers } from 'redux';
 
 
 
-function myCategories(state = [], action) {
+function myCategories(state = {
+    loadingError: false,
+    categories: null
+}, action) {
     switch(action.type) {
         case GET_CATEGORIES:
-            return action.categories;
+            return {
+                ...state,
+                categories: action.categories,
+            };
+        case ERROR:
+            return {
+                ...state,
+                loadingError: true,
+            };
         default:
             return state
     }

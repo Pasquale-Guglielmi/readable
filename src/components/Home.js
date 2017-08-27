@@ -3,19 +3,18 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {fetchCategories} from '../actions/categories';
+import { Link } from 'react-router-dom';
 
 class Home extends Component {
-    componentDidMount() {
-
-    }
-
     render() {
+        const {loadingError, categories} = this.props;
         return (
             <div>
                 <div className="nav">
                     <ul className="categories">
-                        oooo
+                        {(loadingError)? <li className="category">Loading Error!</li>
+                        : (categories)? categories.map((item) => <li key={item.name} className="category"><Link to={`${item.name}`}>{item.name}</Link></li>)
+                        : <li className="category">loading</li>}
                     </ul>
                 </div>
             </div>
@@ -24,17 +23,12 @@ class Home extends Component {
 }
 
 function mapStateToProps({myCategories}) {
-    return {
-        categories: myCategories.reduce((result, category) => {
-            result.push(category.name)
-            return result
-        }, [])
-    }
+    return {...myCategories}
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getCategories: () => dispatch(fetchCategories())
+        /*getCategories: () => dispatch(fetchCategories())*/
         /*remove: (data) => dispatch(removeFromCalendar(data))*/
     }
 }

@@ -8,14 +8,13 @@ export const GET_CATEGORIES = 'GET_CATEGORIES';
 export const CATEGORY_POSTS = 'CATEGORY_POSTS';
 export const ERROR = 'ERROR';
 
-export function showError(error) {
+export function loadingError() {
     return {
-        type: ERROR,
-        error,
+        type: ERROR
     }
 }
 
-export function categories(categories) {
+export function categories({categories}) {
     return {
         type: GET_CATEGORIES,
         categories,
@@ -33,7 +32,7 @@ export function fetchCategories() {
     return function (dispatch) {
         return Api.getCategories().then(
             data => dispatch(categories(data)),
-            error => dispatch(showError(error))
+            error => dispatch(loadingError({error: 'Loading Error!!!'}))
         )
     }
 }
@@ -42,7 +41,7 @@ export function fetchCategoryPosts(category) {
     return function (dispatch) {
         return Api.getCategoryPosts(category).then(
             data => dispatch(categoryPosts(data)),
-            error => dispatch(showError(error))
+            error => dispatch(loadingError())
         )
     }
 }

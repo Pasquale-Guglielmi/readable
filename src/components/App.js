@@ -16,7 +16,7 @@ class App extends Component {
 
 export default App
 
-Api.getCategories().then((res) => console.log(res))
+/*Api.getCategories().then((res) => console.log(res))*/
 
 /*Api.getCategoryPosts('react').then((res) => console.log(res))*/
 
