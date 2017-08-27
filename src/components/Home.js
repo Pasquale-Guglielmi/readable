@@ -24,8 +24,8 @@ class Home extends Component {
     }
 }
 
-function mapStateToProps({myCategories}) {
-    return {...myCategories}
+function mapStateToProps({myCategories, isLoading, loadingError}) {
+    return {...myCategories, ...isLoading, ...loadingError}
 }
 
 function mapDispatchToProps(dispatch) {

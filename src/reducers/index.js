@@ -4,28 +4,33 @@
 import {GET_CATEGORIES, ERROR, LOADING} from '../actions/categories'
 import { combineReducers } from 'redux';
 
+function isLoading(state = {loading: false}, action) {
+    const {isLoading} = action
+    switch(action.type) {
+        case LOADING:
+            return {loading: isLoading}
+        default:
+            return state
+    }
+}
 
+function loadingError(state = {loadingError: false}, action) {
+    const {hasErrored} = action
+    switch(action.type) {
+        case ERROR:
+            return {loadingError: hasErrored}
+        default:
+            return state
+    }
+}
 
-function myCategories(state = {
-    loading: false,
-    loadingError: false,
-    categories: null
-}, action) {
+function myCategories(state = {categories: null}, action) {
+    const {categories} = action
     switch(action.type) {
         case GET_CATEGORIES:
             return {
                 ...state,
-                categories: action.categories,
-            };
-        case ERROR:
-            return {
-                ...state,
-                loadingError: action.hasErrored,
-            };
-        case LOADING:
-            return {
-                ...state,
-                loading: action.isLoading,
+                categories: categories,
             };
         default:
             return state
@@ -55,4 +60,8 @@ function myCategories(state = {
     }
 }*/
 
-export default combineReducers({myCategories: myCategories})
+export default combineReducers({
+    myCategories: myCategories,
+    isLoading: isLoading,
+    loadingError: loadingError,
+})
