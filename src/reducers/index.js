@@ -3,6 +3,7 @@
  */
 import {GET_CATEGORIES} from '../actions/categories'
 import {ERROR, LOADING} from '../actions/loading'
+import {GET_ALL_POSTS, CATEGORY_POSTS} from '../actions/posts'
 import { combineReducers } from 'redux';
 
 function isLoading(state = {loading: false}, action) {
@@ -38,6 +39,21 @@ function myCategories(state = {categories: null}, action) {
     }
 }
 
+function myPosts(state = {posts: []}, action) {
+    switch(action.type) {
+        case GET_ALL_POSTS:
+            return {
+                posts: action.posts
+            };
+        case CATEGORY_POSTS:
+            return {
+                posts: action.posts
+            };
+        default:
+            return state
+    }
+}
+
 
 /*function calendar(state = initialCalendarState, action) {
     const {recipe, day, meal} = action
@@ -65,4 +81,5 @@ export default combineReducers({
     myCategories: myCategories,
     isLoading: isLoading,
     loadingError: loadingError,
+    myPosts: myPosts,
 })

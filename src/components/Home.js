@@ -5,6 +5,7 @@ import '../styles/home.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import PostsList from './PostsList'
 
 class Home extends Component {
     render() {
@@ -19,6 +20,7 @@ class Home extends Component {
                             <Link to={`${item.name}`}>{item.name}</Link></li>)}
                     </ul>
                 </div>
+                <PostsList></PostsList>
             </div>
         )
     }
