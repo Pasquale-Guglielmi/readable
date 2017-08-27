@@ -7,14 +7,15 @@ import { Link } from 'react-router-dom';
 
 class Home extends Component {
     render() {
-        const {loadingError, categories} = this.props;
+        const {loadingError, categories, loading} = this.props;
         return (
             <div>
                 <div className="nav">
                     <ul className="categories">
                         {(loadingError)? <li className="category">Loading Error!</li>
-                        : (categories)? categories.map((item) => <li key={item.name} className="category"><Link to={`${item.name}`}>{item.name}</Link></li>)
-                        : <li className="category">loading</li>}
+                        : (loading)? <li className="category">Loading...</li>
+                        : categories.map((item) => <li key={item.name} className="category">
+                            <Link to={`${item.name}`}>{item.name}</Link></li>)}
                     </ul>
                 </div>
             </div>

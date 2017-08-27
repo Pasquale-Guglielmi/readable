@@ -1,12 +1,13 @@
 /**
  * Created by pasquale on 26/08/2017.
  */
-import {GET_CATEGORIES, ERROR} from '../actions/categories'
+import {GET_CATEGORIES, ERROR, LOADING} from '../actions/categories'
 import { combineReducers } from 'redux';
 
 
 
 function myCategories(state = {
+    loading: false,
     loadingError: false,
     categories: null
 }, action) {
@@ -19,7 +20,12 @@ function myCategories(state = {
         case ERROR:
             return {
                 ...state,
-                loadingError: true,
+                loadingError: action.hasErrored,
+            };
+        case LOADING:
+            return {
+                ...state,
+                loading: action.isLoading,
             };
         default:
             return state

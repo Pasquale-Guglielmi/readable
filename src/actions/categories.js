@@ -7,10 +7,19 @@ import * as Api from '../utils/Api'
 export const GET_CATEGORIES = 'GET_CATEGORIES';
 export const CATEGORY_POSTS = 'CATEGORY_POSTS';
 export const ERROR = 'ERROR';
+export const LOADING = 'LOADING';
 
 export function loadingError() {
     return {
-        type: ERROR
+        type: ERROR,
+        hasErrored: true,
+    }
+}
+
+export function isLoading(boolean) {
+    return {
+        type: LOADING,
+        isLoading: boolean,
     }
 }
 
@@ -30,17 +39,23 @@ export function categoryPosts(posts) {
 
 export function fetchCategories() {
     return function (dispatch) {
+        dispatch(isLoading(true));
         return Api.getCategories().then(
-            data => dispatch(categories(data)),
-            error => dispatch(loadingError({error: 'Loading Error!!!'}))
+            data => {
+                dispatch(categories(data))
+                dispatch(isLoading(false));
+            },
+            error => dispatch(loadingError())
         )
     }
 }
 
 export function fetchCategoryPosts(category) {
     return function (dispatch) {
+        dispatch(isLoading())
         return Api.getCategoryPosts(category).then(
-            data => dispatch(categoryPosts(data)),
+            data => {
+                dispatch(categoryPosts(data))},
             error => dispatch(loadingError())
         )
     }
