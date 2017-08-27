@@ -1,0 +1,29 @@
+.posts-list {
+    font-weight: 100;
+    list-style: none;
+    padding: 2em;
+    margin: 0;
+}
+
+.post-item {
+    border-bottom: 1px solid #333;
+    padding: 2em .5em;
+}
+
+.post-top:hover {
+    cursor: pointer;
+}
+
+.score {
+    float: right;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: #2bc;
+}
+
+.icon-btn:hover {
+    cursor: pointer;
+}

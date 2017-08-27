@@ -22,11 +22,11 @@ export default App
 
 /*Api.getPosts().then((res) => console.log(res))*/
 
-/*Api.getPost('8xf0y6ziyjabvozdd253nd').then((res) => console.log(res))*/
+Api.getPost('8xf0y6ziyjabvozdd253nd').then((res) => console.log(res))
 
 /*Api.editPost({title: 'React is so awesoome!!!', body: 'Yes, it is'}, '1503770062658')*/
 
-/*Api.getPostComments('8xf0y6ziyjabvozdd253nd').then((res) => console.log(res))*/
+Api.getPostComments('8xf0y6ziyjabvozdd253nd').then((res) => console.log(res))
 
 /*Api.getCommentDetails("894tuq4ut84ut8v4t8wun89g").then((res) => console.log(res))*/
 
