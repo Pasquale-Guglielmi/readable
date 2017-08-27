@@ -4,6 +4,7 @@
 import {GET_CATEGORIES} from '../actions/categories'
 import {ERROR, LOADING} from '../actions/loading'
 import {GET_ALL_POSTS, CATEGORY_POSTS} from '../actions/posts'
+import {GET_COMMENTS} from '../actions/comments'
 import { combineReducers } from 'redux';
 
 function isLoading(state = {loading: false}, action) {
@@ -49,11 +50,26 @@ function myPosts(state = {posts: []}, action) {
             return {
                 posts: action.posts
             };
+        case GET_COMMENTS:
+            const {parentId} = action
+            const comments = action.comments.filter((item) => (!item.deleted));
+            const newPosts = state.posts.reduce((result, item) => {
+                if (item.id === parentId) {
+                    item.comments = comments
+                    result.push(item)
+                    return result
+                }else {
+                    result.push(item)
+                    return result
+                }
+            }, []);
+            return {
+                posts: newPosts
+            }
         default:
             return state
     }
 }
-
 
 /*function calendar(state = initialCalendarState, action) {
     const {recipe, day, meal} = action

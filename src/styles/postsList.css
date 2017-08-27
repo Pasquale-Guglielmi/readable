@@ -10,12 +10,14 @@
     padding: 2em .5em;
 }
 
-.post-top:hover {
-    cursor: pointer;
+.post-top {
+    display: block;
+    color: #000;
 }
 
-.score {
-    float: right;
+.post-top:hover {
+    cursor: pointer;
+    color: #2bc;
 }
 
 .icon-btn {
@@ -26,4 +28,13 @@
 
 .icon-btn:hover {
     cursor: pointer;
+}
+
+.post-bottom {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comments-count {
+    float: right;
 }
