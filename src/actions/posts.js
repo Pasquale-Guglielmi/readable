@@ -3,7 +3,7 @@
  */
 
 import * as Api from '../utils/Api'
-import {loadingError, isLoading} from './loading'
+import {loadingPostsError, loadingPosts} from './loading'
 
 export const GET_ALL_POSTS = 'GET_ALL_POSTS';
 export const CATEGORY_POSTS = 'CATEGORY_POSTS';
@@ -32,15 +32,15 @@ export function post(post) {
 
 export function fetchAllPosts() {
     return function (dispatch) {
-        dispatch(isLoading(true))
+        dispatch(loadingPosts(true))
         return Api.getPosts().then(
             data => {
                 dispatch(posts(data))
-                dispatch(isLoading(false))
+                dispatch(loadingPosts(false))
             },
             error => {
-                dispatch(loadingError())
-                dispatch(isLoading(false))
+                dispatch(loadingPostsError())
+                dispatch(loadingPosts(false))
             }
         )
     }
@@ -48,15 +48,15 @@ export function fetchAllPosts() {
 
 export function fetchCategoryPosts(category) {
     return function (dispatch) {
-        dispatch(isLoading(true))
+        dispatch(loadingPosts(true))
         return Api.getCategoryPosts(category).then(
             data => {
                 dispatch(categoryPosts(data))
-                dispatch(isLoading(false))
+                dispatch(loadingPosts(false))
             },
             error => {
-                dispatch(loadingError())
-                dispatch(isLoading(false))
+                dispatch(loadingPostsError())
+                dispatch(loadingPosts(false))
             }
         )
     }
@@ -64,15 +64,15 @@ export function fetchCategoryPosts(category) {
 
 export function fetchPost(id) {
     return function (dispatch) {
-        dispatch(isLoading(true))
+        dispatch(loadingPosts(true))
         return Api.getPost(id).then(
             data => {
                 dispatch(post(data))
-                dispatch(isLoading(false))
+                dispatch(loadingPosts(false))
             },
             error => {
-                dispatch(loadingError())
-                dispatch(isLoading(false))
+                dispatch(loadingPostsError())
+                dispatch(loadingPosts(false))
             }
         )
     }

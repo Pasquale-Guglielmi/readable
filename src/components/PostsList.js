@@ -21,8 +21,8 @@ class PostsList extends Component {
     }
 }
 
-function mapStateToProps({myPosts, isLoading, loadingError}) {
-    return {...isLoading, ...loadingError, ...myPosts}
+function mapStateToProps({myPosts}) {
+    return {...myPosts}
 }
 
 function mapDispatchToProps(dispatch) {

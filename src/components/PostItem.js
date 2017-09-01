@@ -55,11 +55,15 @@ class PostItem extends Component {
     }
 }
 
+function mapStateToProps({myComments}) {
+    return {myComments}
+}
+
 function mapDispatchToProps(dispatch) {
     return {
         setComments: (data) => dispatch(getComments(data)),
     }
 }
 
-export default connect(null, mapDispatchToProps)(PostItem)
+export default connect(mapStateToProps, mapDispatchToProps)(PostItem)
 

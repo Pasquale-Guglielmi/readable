@@ -2,100 +2,87 @@
  * Created by pasquale on 26/08/2017.
  */
 import {GET_CATEGORIES} from '../actions/categories'
-import {ERROR, LOADING} from '../actions/loading'
+import {LOADING_POSTS, LOADING_POSTS_ERROR,
+        LOADING_CATEGORIES_ERROR, LOADING_CATEGORIES,
+        LOADING_COMMENTS_ERROR, LOADING_COMMENTS} from '../actions/loading'
+import {LO} from '../actions/comments'
 import {GET_ALL_POSTS, CATEGORY_POSTS} from '../actions/posts'
 import {GET_COMMENTS} from '../actions/comments'
 import { combineReducers } from 'redux';
 
-function isLoading(state = {loading: false}, action) {
-    const {isLoading} = action
-    switch(action.type) {
-        case LOADING:
-            return {loading: isLoading}
-        default:
-            return state
-    }
-}
-
-function loadingError(state = {loadingError: false}, action) {
-    const {hasErrored} = action
-    switch(action.type) {
-        case ERROR:
-            return {loadingError: hasErrored}
-        default:
-            return state
-    }
-}
-
-function myCategories(state = {categories: null}, action) {
-    const {categories} = action
+function myCategories(state = {categories: null, loading: false, errorLoading: false}, action) {
+    const {categories, hasErrored, isLoading} = action
     switch(action.type) {
         case GET_CATEGORIES:
             return {
                 ...state,
                 categories: categories,
             };
+        case LOADING_CATEGORIES:
+            return {
+                ...state,
+                loading: isLoading,
+            };
+        case LOADING_CATEGORIES_ERROR:
+            return {
+                ...state,
+                errorLoading: hasErrored,
+            }
         default:
             return state
     }
 }
 
-function myPosts(state = {posts: []}, action) {
+function myPosts(state = {posts: [], loading: false, errorLoading: false}, action) {
+    const {posts, hasErrored, isLoading} = action
     switch(action.type) {
         case GET_ALL_POSTS:
             return {
-                posts: action.posts
+                ...state,
+                posts: posts,
             };
         case CATEGORY_POSTS:
             return {
-                posts: action.posts
+                ...state,
+                posts: posts,
             };
-        case GET_COMMENTS:
-            const {parentId} = action
-            const comments = action.comments.filter((item) => (!item.deleted));
-            const newPosts = state.posts.reduce((result, item) => {
-                if (item.id === parentId) {
-                    item.comments = comments
-                    result.push(item)
-                    return result
-                }else {
-                    result.push(item)
-                    return result
-                }
-            }, []);
+        case LOADING_POSTS:
             return {
-                posts: newPosts
-            }
+                ...state,
+                loading: isLoading,
+            };
+        case LOADING_POSTS_ERROR:
+            return {
+                ...state,
+                errorLoading: hasErrored,
+            };
         default:
             return state
     }
 }
 
-/*function calendar(state = initialCalendarState, action) {
-    const {recipe, day, meal} = action
+function myComments(state = {commentsList: [], loading: false, errorLoading: false}, action) {
     switch(action.type) {
-        case ADD_RECIPE: return {
-            ...state,
-            [day]: {
-                ...state[day],
-                [meal]: recipe.label
+        case GET_COMMENTS:
+            const {comments, parentId} = action
+            const newComments = comments.filter((item) => (!item.deleted))
+            const listItem = {
+                parentId: parentId,
+                comments: comments,
             }
-        }
-        case REMOVE_FROM_CALENDAR: return {
-            ...state,
-            [day]: {
-                ...state[day],
-                [meal]: null
-            }
-        }
+            let newList = state.commentsList.filter((item) => (item.parentId !== parentId))
+            newList.push(listItem)
+            return {
+                ...state,
+                commentsList: newList,
+            };
         default:
             return state
     }
-}*/
+}
 
 export default combineReducers({
     myCategories: myCategories,
-    isLoading: isLoading,
-    loadingError: loadingError,
     myPosts: myPosts,
+    myComments: myComments,
 })

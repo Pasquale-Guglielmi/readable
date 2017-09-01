@@ -5,29 +5,35 @@ import '../styles/home.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import PostsList from './PostsList'
+import PostsList from './PostsList';
+import Loading from 'react-loading';
 
 class Home extends Component {
     render() {
-        const {loadingError, categories, loading} = this.props;
+        const {errorLoading, categories, loading} = this.props;
         return (
             <div>
-                <div className="nav">
-                    <ul className="categories">
-                        {(loadingError)? <li className="category">Loading Error!</li>
-                        : (loading)? <li className="category">Loading...</li>
-                        : categories.map((item) => <li key={item.name} className="category">
-                            <Link to={`${item.name}`}>{item.name}</Link></li>)}
-                    </ul>
-                </div>
-                <PostsList></PostsList>
+                {
+                    (loading)? <Loading delay={200} type='spin' color='#222' className='loading'></Loading>
+                        : (errorLoading)? <div>Error occurred while loading content!</div>
+                        : <div className="nav">
+                            <ul className="categories">
+                                {
+                                    categories.map((item) => <li key={item.name} className="category">
+                                        <Link to={`${item.name}`}>{item.name}</Link>
+                                    </li>)
+                                }
+                            </ul>
+                        </div>
+                }
+                {<PostsList></PostsList>}
             </div>
         )
     }
 }
 
-function mapStateToProps({myCategories, isLoading, loadingError}) {
-    return {...myCategories, ...isLoading, ...loadingError}
+function mapStateToProps({myCategories}) {
+    return {...myCategories}
 }
 
 function mapDispatchToProps(dispatch) {
