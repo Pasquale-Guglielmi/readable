@@ -6,16 +6,19 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '../styles/postsList.css';
 import PostItem from './PostItem';
+import Loading from 'react-loading';
 
 class PostsList extends Component {
     render() {
         const {loadingError, loading, posts} = this.props
         return (
             <div className="posts-container">
-                {((posts.length === 0) && (!loading))? <div>No Posts Found!</div>
-                : <ul className="posts-list">
-                    {posts.map((post) => <PostItem post={post} key={post.id}></PostItem>)}
-                </ul>}
+                {(loading)? <Loading delay={200} type='spin' color='#222' className='loading'></Loading>
+                    : (loadingError)? <div>Error loading posts!</div>
+                    :((posts.length === 0) && (!loading))? <div>No Posts Found!</div>
+                    :<ul className="posts-list">
+                        {posts.map((post) => <PostItem post={post} key={post.id}></PostItem>)}
+                    </ul>}
             </div>
         )
     }

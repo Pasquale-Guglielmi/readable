@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../styles/App.css';
 import Home from './Home';
 import { Route } from 'react-router-dom';
-import * as Api from '../utils/Api';
+/*import * as Api from '../utils/Api';*/
 
 class App extends Component {
   render() {

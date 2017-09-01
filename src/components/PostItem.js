@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Like from 'react-icons/lib/fa/thumbs-up';
 import Unlike from 'react-icons/lib/fa/thumbs-down';
-import {getComments} from '../actions/comments'
+import {getComments} from '../actions/comments';
+import {loadingComments, loadingCommentsError} from '../actions/loading'
 import * as Api from '../utils/Api';
 
 class PostItem extends Component {
@@ -15,13 +16,19 @@ class PostItem extends Component {
     }
 
     componentDidMount() {
-        const {post, setComments} = this.props
+        const {post, setComments, loadingComments, loadingCommentsError} = this.props
+        loadingComments(true)
         Api.getPostComments(post.id).then((items) => {
-            setComments({comments: items, parentId: post.id})
-            this.setState({
-                commentsCount: items.length
+                setComments({comments: items, parentId: post.id})
+                this.setState({
+                    commentsCount: items.length
+                })
+                loadingComments(false)
+            },
+            (err) => {
+                loadingComments(false)
+                loadingCommentsError(true)
             })
-        })
     }
 
     render() {
@@ -62,6 +69,8 @@ function mapStateToProps({myComments}) {
 function mapDispatchToProps(dispatch) {
     return {
         setComments: (data) => dispatch(getComments(data)),
+        loadingComments: (data) => dispatch(loadingComments(data)),
+        loadingCommentsError: (data) => dispatch(loadingCommentsError(data)),
     }
 }
 
