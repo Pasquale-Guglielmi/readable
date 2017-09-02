@@ -50,10 +50,24 @@
 
 .modal {
     position: absolute;
-    top: 10%;
+    top: 20%;
     left: 10%;
     right: 10%;
-    bottom: 10%;
+    bottom: 20%;
+    border: 1px solid rgb(204, 204, 204);
+    background: rgb(255, 255, 255);
+    overflow: auto;
+    border-radius: 4px;
+    outline: none;
+    padding: 20px;
+    box-shadow: 0 3px 8px 0 rgba(0,0,0,.24), 0 3px 12px 0 rgba(0,0,0,.12);
+}
+
+.delete-modal {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    right: 30%;
     border: 1px solid rgb(204, 204, 204);
     background: rgb(255, 255, 255);
     overflow: auto;
@@ -71,7 +85,8 @@
 .edit-main {
     display: flex;
     flex-direction: column;
-    padding: 1em;
+    padding: 1em .5em;
+    font-size: 14px;
 }
 
 .edit-input {
@@ -90,16 +105,30 @@
     width: 100%;
     margin: 2em 1em;
     border-radius: 3px;
-    height: 100px;
+    height: 150px;
 }
 
-.edit-submit {
-    width: 80px;
+.edit-button {
+    width: 60px;
     background-color: #fff;
+    border: 1px solid rgb(204, 204, 204);
+    box-shadow: 0 3px 8px 0 rgba(0,0,0,.24), 0 3px 12px 0 rgba(0,0,0,.12);
     border-radius: 3px;
     font-size: 14px;
+    margin: 0 .5em;
 }
 
-.edit-submit:hover {
+.edit-button:hover {
     cursor: pointer;
+}
+
+.delete-message {
+    text-align: center;
+    padding: 2em;
+}
+
+.delete-message-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 1em;
 }

@@ -5,7 +5,7 @@ import {GET_CATEGORIES} from '../actions/categories'
 import {LOADING_POSTS, LOADING_POSTS_ERROR,
         LOADING_CATEGORIES_ERROR, LOADING_CATEGORIES,
         LOADING_COMMENTS_ERROR, LOADING_COMMENTS} from '../actions/loading'
-import {GET_ALL_POSTS, CATEGORY_POSTS, VOTE_POST, GET_POST} from '../actions/posts'
+import {GET_ALL_POSTS, CATEGORY_POSTS, VOTE_POST, GET_POST, DELETE_POST} from '../actions/posts'
 import {GET_COMMENTS} from '../actions/comments'
 import { combineReducers } from 'redux';
 
@@ -90,6 +90,21 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
                 ...state,
                 posts: updatedPosts
             };
+        case DELETE_POST: {
+            const posts = state.posts.reduce((result, item) => {
+                if(item.id !== action.id) {
+                    result.push(item)
+                    return result
+                } else {
+                    item.deleted = true
+                    result.push(item)
+                    return result
+                }
+            }, [])
+            return {
+                ...state,
+                posts: posts,
+            }}
         default:
             return state
     }

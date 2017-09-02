@@ -9,13 +9,14 @@ import Unlike from 'react-icons/lib/fa/thumbs-down';
 import Close from 'react-icons/lib/fa/close';
 import {getPostComments} from '../actions/comments';
 import * as Api from '../utils/Api';
-import {votePost, editPost} from '../actions/posts';
+import {votePost, editPost, deletePost} from '../actions/posts';
 import Modal from 'react-modal';
 
 class PostItem extends Component {
     state = {
         commentsCount: null,
         editModalOpen: false,
+        deleteModalOpen: false,
     }
 
     componentDidMount() {
@@ -28,8 +29,22 @@ class PostItem extends Component {
         })
     }
 
-    editHandler() {
-        console.log(this.titleInput.value + this.bodyInput.value)
+    editHandler(event) {
+        event.preventDefault()
+        const title = this.titleInput.value
+        const body = this.bodyInput.value
+        const {editPost, post} = this.props
+        if((title === post.title) && (body === post.body)) {
+            alert("No changes to be submitted")
+            return
+        }
+        const data = {
+            title,
+            body,
+        }
+        editPost(data, post.id).then(() => {
+            alert("Post edited successfully!")
+        })
     }
 
     openEditModal = () => {
@@ -44,9 +59,29 @@ class PostItem extends Component {
         })
     }
 
+    deleteHandler() {
+        const {post, deletePost} = this.props
+        deletePost(post.id).then(() => {
+            alert("Post deleted!")
+        })
+    }
+    
+
+    openDeleteModal = () => {
+        this.setState({
+            deleteModalOpen: true,
+        })
+    }
+
+    closeDeleteModal = () => {
+        this.setState({
+            deleteModalOpen: false,
+        })
+    }
+
     render() {
         const {post, votePost} = this.props
-        const {editModalOpen} = this.state
+        const {editModalOpen, deleteModalOpen} = this.state
         return (
             <li key={post.id} className="post-item">
                 <Link to='/' className="post-top">
@@ -75,13 +110,17 @@ class PostItem extends Component {
                         {(this.state.commentsCount !== null) && `${this.state.commentsCount} comments`}
                     </div>
                     <div>
-                        <button onClick={() => {
+                        <button
+                            className="edit-button"
+                            onClick={() => {
                             this.openEditModal()
                         }}>
                             Edit
                         </button>
-                        <button onClick={() => {
-
+                        <button
+                            className="edit-button"
+                            onClick={() => {
+                            this.openDeleteModal()
                         }}>
                             Delete
                         </button>
@@ -102,29 +141,59 @@ class PostItem extends Component {
                         <Close size={20}></Close>
                     </button>
                     <div className="edit-main">
-                        <label className="edit-input">
-                            Title:
-                            <textarea
-                                className="title-input"
-                                defaultValue={post.title}
-                                ref={(input) => this.titleInput = input}
-                            />
-                        </label>
-                        <label className="edit-input">
-                            Body:
-                            <textarea
-                                className="body-input"
-                                defaultValue={post.body}
-                                ref={(input) => this.bodyInput = input}
-                            />
-                        </label>
+                        <form
+                            className="edit-main"
+                            onSubmit={(evt) => {
+                            this.editHandler(evt)
+                        }}>
+                            <label className="edit-input">
+                                Title:
+                                <textarea
+                                    required="true"
+                                    className="title-input"
+                                    defaultValue={post.title}
+                                    ref={(input) => this.titleInput = input}
+                                />
+                            </label>
+                            <label className="edit-input">
+                                Body:
+                                <textarea
+                                    required="true"
+                                    className="body-input"
+                                    defaultValue={post.body}
+                                    ref={(input) => this.bodyInput = input}
+                                />
+                            </label>
+                            <input
+                                type="submit"
+                                value="Submit"
+                                className="edit-button"
+                            >
+                            </input>
+                        </form>
+                    </div>
+                </Modal>
+                <Modal
+                    className='delete-modal'
+                    overlayClassName='overlay'
+                    isOpen={deleteModalOpen}
+                    onRequestClose={this.closeDeleteModal}
+                    contentLabel='Modal'
+                >
+                    <div className="delete-message">Are you sure you want delete this post?</div>
+                    <div className="delete-message-buttons">
                         <button
-                            className="edit-submit"
+                            className="edit-button"
                             onClick={() => {
-                                this.editHandler()
-                            }}>
-                            Submit
-                        </button>
+                                this.deleteHandler()
+                            }}
+                        >Yes</button>
+                        <button
+                            className="edit-button"
+                            onClick={() => {
+                                this.closeDeleteModal()
+                            }}
+                        >No</button>
                     </div>
                 </Modal>
             </li>
@@ -139,6 +208,7 @@ function mapStateToProps({myPosts}) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        deletePost: (id) => dispatch(deletePost(id)),
         editPost: (data, id) => dispatch(editPost(data, id)),
         votePost: (vote, id) => dispatch(votePost(vote, id)),
         setComments: (data) => dispatch(getPostComments(data)),

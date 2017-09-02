@@ -40,6 +40,13 @@ export function voteP(vote, id) {
     }
 }
 
+export function deleteP(id) {
+    return {
+        type: DELETE_POST,
+        id,
+    }
+}
+
 export function fetchAllPosts() {
     return function (dispatch) {
         dispatch(loadingPosts(true))
@@ -77,12 +84,12 @@ export function fetchPost(id) {
         dispatch(loadingPosts(true))
         return Api.getPost(id).then(
             data => {
-                dispatch(post(data))
                 dispatch(loadingPosts(false))
+                return dispatch(post(data))
             },
             error => {
-                dispatch(loadingPostsError())
                 dispatch(loadingPosts(false))
+                dispatch(loadingPostsError())
             }
         )
     }
@@ -100,6 +107,12 @@ export function votePost(vote, id) {
 
 export function editPost(data, id) {
     return function (dispatch) {
-        return Api.editPost(data, id).then(fetchPost(id))
+        return Api.editPost(data, id).then(dispatch(fetchPost(id)))
+    }
+}
+
+export function deletePost(id) {
+    return function (dispatch) {
+        return Api.deletePost(id).then(dispatch(deleteP(id)))
     }
 }
