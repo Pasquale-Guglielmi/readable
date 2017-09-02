@@ -47,3 +47,59 @@
     padding: 1.5em;
     background-color: #777;
 }
+
+.modal {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    right: 10%;
+    bottom: 10%;
+    border: 1px solid rgb(204, 204, 204);
+    background: rgb(255, 255, 255);
+    overflow: auto;
+    border-radius: 4px;
+    outline: none;
+    padding: 20px;
+    box-shadow: 0 3px 8px 0 rgba(0,0,0,.24), 0 3px 12px 0 rgba(0,0,0,.12);
+}
+
+.close {
+    display: block;
+    float: right;
+}
+
+.edit-main {
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+}
+
+.edit-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.title-input {
+    width: 100%;
+    margin: 2em 1em;
+    border-radius: 3px;
+}
+
+.body-input {
+    width: 100%;
+    margin: 2em 1em;
+    border-radius: 3px;
+    height: 100px;
+}
+
+.edit-submit {
+    width: 80px;
+    background-color: #fff;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.edit-submit:hover {
+    cursor: pointer;
+}

@@ -6,13 +6,16 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Like from 'react-icons/lib/fa/thumbs-up';
 import Unlike from 'react-icons/lib/fa/thumbs-down';
+import Close from 'react-icons/lib/fa/close';
 import {getPostComments} from '../actions/comments';
 import * as Api from '../utils/Api';
 import {votePost, editPost} from '../actions/posts';
+import Modal from 'react-modal';
 
 class PostItem extends Component {
     state = {
         commentsCount: null,
+        editModalOpen: false,
     }
 
     componentDidMount() {
@@ -26,11 +29,24 @@ class PostItem extends Component {
     }
 
     editHandler() {
-        const {votePost} = this.props
+        console.log(this.titleInput.value + this.bodyInput.value)
+    }
+
+    openEditModal = () => {
+        this.setState({
+            editModalOpen: true,
+        })
+    }
+
+    closeEditModal = () => {
+        this.setState({
+            editModalOpen: false,
+        })
     }
 
     render() {
         const {post, votePost} = this.props
+        const {editModalOpen} = this.state
         return (
             <li key={post.id} className="post-item">
                 <Link to='/' className="post-top">
@@ -60,7 +76,7 @@ class PostItem extends Component {
                     </div>
                     <div>
                         <button onClick={() => {
-
+                            this.openEditModal()
                         }}>
                             Edit
                         </button>
@@ -71,6 +87,46 @@ class PostItem extends Component {
                         </button>
                     </div>
                 </div>
+                <Modal
+                    className='modal'
+                    overlayClassName='overlay'
+                    isOpen={editModalOpen}
+                    onRequestClose={this.closeEditModal}
+                    contentLabel='Modal'
+                >
+                    <button
+                        className="icon-btn close"
+                        onClick={() => {
+                            this.closeEditModal()
+                        }}>
+                        <Close size={20}></Close>
+                    </button>
+                    <div className="edit-main">
+                        <label className="edit-input">
+                            Title:
+                            <textarea
+                                className="title-input"
+                                defaultValue={post.title}
+                                ref={(input) => this.titleInput = input}
+                            />
+                        </label>
+                        <label className="edit-input">
+                            Body:
+                            <textarea
+                                className="body-input"
+                                defaultValue={post.body}
+                                ref={(input) => this.bodyInput = input}
+                            />
+                        </label>
+                        <button
+                            className="edit-submit"
+                            onClick={() => {
+                                this.editHandler()
+                            }}>
+                            Submit
+                        </button>
+                    </div>
+                </Modal>
             </li>
         )
     }
