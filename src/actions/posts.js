@@ -8,6 +8,8 @@ import {loadingPostsError, loadingPosts} from './loading'
 export const GET_ALL_POSTS = 'GET_ALL_POSTS';
 export const CATEGORY_POSTS = 'CATEGORY_POSTS';
 export const GET_POST = 'GET_POST';
+export const VOTE_POST = 'VOTE_POST';
+export const DELETE_POST = 'DELETE_POST';
 
 export function posts(posts) {
     return {
@@ -30,37 +32,45 @@ export function post(post) {
     }
 }
 
+export function voteP(vote, id) {
+    return {
+        type: VOTE_POST,
+        vote: vote,
+        id: id,
+    }
+}
+
 export function fetchAllPosts() {
     return function (dispatch) {
         dispatch(loadingPosts(true))
         return Api.getPosts().then(
             data => {
-                dispatch(posts(data))
                 dispatch(loadingPosts(false))
+                dispatch(posts(data))
             },
             error => {
-                dispatch(loadingPostsError())
                 dispatch(loadingPosts(false))
+                dispatch(loadingPostsError())
             }
         )
     }
 }
-
+/*
 export function fetchCategoryPosts(category) {
     return function (dispatch) {
         dispatch(loadingPosts(true))
         return Api.getCategoryPosts(category).then(
             data => {
-                dispatch(categoryPosts(data))
                 dispatch(loadingPosts(false))
+                dispatch(categoryPosts(data))
             },
             error => {
-                dispatch(loadingPostsError())
                 dispatch(loadingPosts(false))
+                dispatch(loadingPostsError())
             }
         )
     }
-}
+}*/
 
 export function fetchPost(id) {
     return function (dispatch) {
@@ -75,5 +85,21 @@ export function fetchPost(id) {
                 dispatch(loadingPosts(false))
             }
         )
+    }
+}
+
+export function votePost(vote, id) {
+    return function (dispatch) {
+        return Api.votePost(vote, id).then(
+            () => {
+                dispatch(voteP(vote, id))
+            }
+        )
+    }
+}
+
+export function editPost(data, id) {
+    return function (dispatch) {
+        return Api.editPost(data, id).then(fetchPost(id))
     }
 }

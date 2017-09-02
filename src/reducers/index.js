@@ -5,7 +5,7 @@ import {GET_CATEGORIES} from '../actions/categories'
 import {LOADING_POSTS, LOADING_POSTS_ERROR,
         LOADING_CATEGORIES_ERROR, LOADING_CATEGORIES,
         LOADING_COMMENTS_ERROR, LOADING_COMMENTS} from '../actions/loading'
-import {GET_ALL_POSTS, CATEGORY_POSTS} from '../actions/posts'
+import {GET_ALL_POSTS, CATEGORY_POSTS, VOTE_POST, GET_POST} from '../actions/posts'
 import {GET_COMMENTS} from '../actions/comments'
 import { combineReducers } from 'redux';
 
@@ -26,7 +26,7 @@ function myCategories(state = {categories: null, loading: false, errorLoading: f
             return {
                 ...state,
                 errorLoading: hasErrored,
-            }
+            };
         default:
             return state
     }
@@ -54,6 +54,41 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
             return {
                 ...state,
                 errorLoading: hasErrored,
+            };
+        case VOTE_POST:
+            const {vote, id} = action
+            const postsUpdated = state.posts.reduce((result, item) => {
+                if(item.id !== id) {
+                    result.push(item)
+                    return result
+                } else if(vote === "upVote") {
+                    item.voteScore ++
+                    result.push(item)
+                    return result
+                } else {
+                    item.voteScore --
+                    result.push(item)
+                    return result
+                }
+            }, [])
+            return {
+                ...state,
+                posts: postsUpdated
+            };
+        case GET_POST:
+            const {post} = action
+            const updatedPosts = state.posts.reduce((result, item) => {
+                if(item.id !== post.id) {
+                    result.push(item)
+                    return result
+                } else {
+                    result.push(post)
+                    return result
+                }
+            }, [])
+            return {
+                ...state,
+                posts: updatedPosts
             };
         default:
             return state

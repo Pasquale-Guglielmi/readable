@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../styles/App.css';
 import Home from './Home';
 import { Route } from 'react-router-dom';
+import PostsList from './PostsList';
 /*import * as Api from '../utils/Api';*/
 
 class App extends Component {
@@ -9,6 +10,7 @@ class App extends Component {
     return (
       <div>
         <Route exact path='/' component={Home}/>
+        <Route path='/:category' component={PostsList}/>
       </div>
     )
   }
