@@ -38,7 +38,7 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
         case GET_ALL_POSTS:
             return {
                 ...state,
-                posts: posts,
+                posts,
             };
         case CATEGORY_POSTS:
             return {

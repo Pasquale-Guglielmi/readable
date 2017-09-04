@@ -8,7 +8,6 @@ import Like from 'react-icons/lib/fa/thumbs-up';
 import Unlike from 'react-icons/lib/fa/thumbs-down';
 import Close from 'react-icons/lib/fa/close';
 import {getPostComments} from '../actions/comments';
-import * as Api from '../utils/Api';
 import {votePost, editPost, deletePost} from '../actions/posts';
 import Modal from 'react-modal';
 
@@ -133,13 +132,15 @@ class PostItem extends Component {
                     onRequestClose={this.closeEditModal}
                     contentLabel='Modal'
                 >
-                    <button
-                        className="icon-btn close"
-                        onClick={() => {
-                            this.closeEditModal()
-                        }}>
-                        <Close size={20}></Close>
-                    </button>
+                    <div className="close-modal-btn">
+                        <button
+                            className="icon-btn close"
+                            onClick={() => {
+                                this.closeEditModal()
+                            }}>
+                            <Close size={20}></Close>
+                        </button>
+                    </div>
                     <div className="edit-main">
                         <form
                             className="edit-main"

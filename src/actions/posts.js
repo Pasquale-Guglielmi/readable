@@ -53,7 +53,7 @@ export function fetchAllPosts() {
         return Api.getPosts().then(
             data => {
                 dispatch(loadingPosts(false))
-                dispatch(posts(data))
+                return dispatch(posts(data))
             },
             error => {
                 dispatch(loadingPosts(false))
@@ -98,9 +98,7 @@ export function fetchPost(id) {
 export function votePost(vote, id) {
     return function (dispatch) {
         return Api.votePost(vote, id).then(
-            () => {
                 dispatch(voteP(vote, id))
-            }
         )
     }
 }
@@ -114,5 +112,11 @@ export function editPost(data, id) {
 export function deletePost(id) {
     return function (dispatch) {
         return Api.deletePost(id).then(dispatch(deleteP(id)))
+    }
+}
+
+export function addNewPost(data) {
+    return function (dispatch) {
+        return Api.addPost(data).then(dispatch(fetchAllPosts()))
     }
 }

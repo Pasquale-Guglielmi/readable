@@ -20,6 +20,26 @@
     color: #2bc;
 }
 
+.top-button {
+    margin: .5em;
+    background-color: #fff;
+    border: 1px solid rgb(204, 204, 204);
+    box-shadow: 0 3px 8px 0 rgba(0,0,0,.24), 0 3px 12px 0 rgba(0,0,0,.12);
+    border-radius: 3px;
+    height: 24px;
+}
+
+.top-button:hover {
+    cursor: pointer;
+    color: #2bc;
+}
+
+.close-modal-btn {
+    position: relative;
+    top: 0;
+    right: 0;
+}
+
 .icon-btn {
     background: none;
     border: none;
@@ -28,6 +48,7 @@
 
 .icon-btn:hover {
     cursor: pointer;
+    background-color: #fff;
 }
 
 .post-bottom {
