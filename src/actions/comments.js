@@ -6,12 +6,20 @@ import * as Api from '../utils/Api';
 import {loadingComments, loadingCommentsError} from '../actions/loading'
 
 export const GET_COMMENTS = 'GET_COMMENTS';
+export const ADD_COMMENT = 'ADD_COMMENT';
 
 export function getComments({comments, parentId}) {
     return {
         type: GET_COMMENTS,
         comments,
         parentId,
+    }
+}
+
+export function addComment(comment) {
+    return {
+        type: ADD_COMMENT,
+        comment
     }
 }
 
@@ -29,4 +37,13 @@ export function getPostComments(id) {
     }
 }
 
+export function addNewComment(data) {
+    return function(dispatch) {
+        return Api.commentPost(data).then(() => {
+            Api.getCommentDetails(data.id).then((comment) => {
+                dispatch(addComment(comment))
+            })
+        })
+    }
+}
 

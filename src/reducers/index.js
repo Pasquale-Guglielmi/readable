@@ -6,7 +6,7 @@ import {LOADING_POSTS, LOADING_POSTS_ERROR,
         LOADING_CATEGORIES_ERROR, LOADING_CATEGORIES,
         LOADING_COMMENTS_ERROR, LOADING_COMMENTS} from '../actions/loading'
 import {GET_ALL_POSTS, CATEGORY_POSTS, VOTE_POST, GET_POST, DELETE_POST} from '../actions/posts'
-import {GET_COMMENTS} from '../actions/comments'
+import {GET_COMMENTS, ADD_COMMENT} from '../actions/comments'
 import { combineReducers } from 'redux';
 
 function myCategories(state = {categories: null, loading: false, errorLoading: false}, action) {
@@ -137,6 +137,12 @@ function myComments(state = {commentsList: [], loading: false, errorLoading: fal
                 ...state,
                 errorLoading: hasErrored,
             };
+        case ADD_COMMENT:
+            const {comment} = action
+            return {
+                ...state,
+                commentsList: state.commentsList.push(comment),
+            }
         default:
             return state
     }

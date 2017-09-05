@@ -4,13 +4,15 @@ import Home from './Home';
 import { Route } from 'react-router-dom';
 import PostsList from './PostsList';
 /*import * as Api from '../utils/Api';*/
+import PostDetails from './PostDetails';
 
 class App extends Component {
   render() {
     return (
       <div>
         <Route exact path='/' component={Home}/>
-        <Route path='/:category' component={PostsList}/>
+        <Route exact path='/:category' component={PostsList}/>
+          <Route exact path='/:category/:id' component={PostDetails}/>
       </div>
     )
   }

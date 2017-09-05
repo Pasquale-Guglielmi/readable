@@ -3,30 +3,22 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+/*import { Link } from 'react-router-dom';*/
 import Like from 'react-icons/lib/fa/thumbs-up';
 import Unlike from 'react-icons/lib/fa/thumbs-down';
 import Close from 'react-icons/lib/fa/close';
-import {getPostComments} from '../actions/comments';
-import {votePost, editPost, deletePost} from '../actions/posts';
+/*import {votePost, editPost, deletePost} from '../actions/posts';*/
 import Modal from 'react-modal';
+import '../styles/comments.css';
 
-class PostItem extends Component {
+class Comment extends Component {
     state = {
-        commentsCount: null,
         editModalOpen: false,
         deleteModalOpen: false,
         detailsOpen: false,
     }
 
     update(someProps) {
-        const {post, setComments} = someProps;
-        setComments(post.id).then((res) => {
-            const comments = res.comments.filter((item) => (!item.deleted))
-            this.setState({
-                commentsCount: comments.length
-            })
-        })
     }
 
     componentDidMount() {
@@ -37,7 +29,7 @@ class PostItem extends Component {
         this.update(nextProps)
     }
 
-    editHandler(event) {
+/*    editHandler(event) {
         event.preventDefault()
         const title = this.titleInput.value
         const body = this.bodyInput.value
@@ -63,13 +55,13 @@ class PostItem extends Component {
         this.setState({
             editModalOpen: false,
         })
-    }
+    }*/
 
-    deleteHandler() {
+/*    deleteHandler() {
         const {post, deletePost} = this.props
         deletePost(post.id)
     }
-    
+
 
     openDeleteModal = () => {
         this.setState({
@@ -81,56 +73,54 @@ class PostItem extends Component {
         this.setState({
             deleteModalOpen: false,
         })
-    }
+    }*/
 
     render() {
-        const {post, votePost} = this.props
+        const {comment, voteComment} = this.props
         const {editModalOpen, deleteModalOpen} = this.state
         return (
-            <div className="post-item">
-                <Link to={`/${post.category}/${post.id}`} className="post-top">
-                    <h2>{post.title}</h2>
-                    <p> by <strong>{post.author}</strong></p>
-                </Link>
+            <div className="comment-item">
+                    <h2>{comment.title}</h2>
+                    <p> by <strong>{comment.author}</strong></p>
+                    <p className="comment-body">
+                        {comment.body}
+                    </p>
                 <div className="post-bottom">
                     <div className="score">
-                        {post.voteScore}
+                        {comment.voteScore}
                         <button
                             className='icon-btn'
                             onClick={() => {
-                                votePost("upVote", post.id)
+                                voteComment("upVote", comment.id)
                             }}>
                             <Like size={20}/>
                         </button>
                         <button
                             className='icon-btn'
                             onClick={() => {
-                                votePost("downVote", post.id)
+                                voteComment("downVote", comment.id)
                             }}>
                             <Unlike size={20}/>
                         </button>
                     </div>
-                    <div className="comments-count">
-                        {(this.state.commentsCount !== null) && `${this.state.commentsCount} comments`}
-                    </div>
-                    <div>
+{/*                    <div>
                         <button
                             className="edit-button"
                             onClick={() => {
-                            this.openEditModal()
-                        }}>
+                                this.openEditModal()
+                            }}>
                             Edit
                         </button>
                         <button
                             className="edit-button"
                             onClick={() => {
-                            this.openDeleteModal()
-                        }}>
+                                this.openDeleteModal()
+                            }}>
                             Delete
                         </button>
-                    </div>
+                    </div>*/}
                 </div>
-                <Modal
+{/*                <Modal
                     className='modal'
                     overlayClassName='overlay'
                     isOpen={editModalOpen}
@@ -150,8 +140,8 @@ class PostItem extends Component {
                         <form
                             className="edit-main"
                             onSubmit={(evt) => {
-                            this.editHandler(evt)
-                        }}>
+                                this.editHandler(evt)
+                            }}>
                             <label className="edit-input">
                                 Title:
                                 <textarea
@@ -178,8 +168,8 @@ class PostItem extends Component {
                             </input>
                         </form>
                     </div>
-                </Modal>
-                <Modal
+                </Modal>*/}
+{/*                <Modal
                     className='delete-modal'
                     overlayClassName='overlay'
                     isOpen={deleteModalOpen}
@@ -201,25 +191,24 @@ class PostItem extends Component {
                             }}
                         >No</button>
                     </div>
-                </Modal>
+                </Modal>*/}
             </div>
         )
     }
 }
 
-function mapStateToProps({myPosts}) {
-    let posts = myPosts.posts
-    return {posts}
+function mapStateToProps({myComments}) {
+    let comments = myComments.comments
+    return {comments}
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        deletePost: (id) => dispatch(deletePost(id)),
-        editPost: (data, id) => dispatch(editPost(data, id)),
-        votePost: (vote, id) => dispatch(votePost(vote, id)),
-        setComments: (data) => dispatch(getPostComments(data)),
+     /*   deleteComment: (id) => dispatch(deleteComment(id)),
+        editComment: (data, id) => dispatch(editComment(data, id)),
+        voteComment: (vote, id) => dispatch(voteComment(vote, id)),*/
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostItem)
+export default connect(mapStateToProps, mapDispatchToProps)(Comment)
 

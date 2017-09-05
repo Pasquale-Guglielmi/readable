@@ -20,7 +20,7 @@ class Home extends Component {
                             <ul className="categories">
                                 {
                                     categories.map((item) => <li key={item.name} className="category">
-                                        <Link to={`${item.name}`}>{item.name}</Link>
+                                        <Link to={`/${item.name}`}>{item.name}</Link>
                                     </li>)
                                 }
                             </ul>

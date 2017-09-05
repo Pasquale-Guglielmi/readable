@@ -10,7 +10,7 @@ import Loading from 'react-loading';
 import Close from 'react-icons/lib/fa/close';
 import Modal from 'react-modal';
 import uuidv1 from 'uuid/v1';
-import {addNewPost} from '../actions/posts'
+import {addNewPost} from '../actions/posts';
 
 class PostsList extends Component {
     state = ({
@@ -53,7 +53,9 @@ class PostsList extends Component {
             category: this.newPostCategory.value
         }
         addNewPost(data).then(() => {
-            alert("Post added successfully!")
+            this.setState({
+                addPostModalOpen: false,
+            })
         })
     }
 
@@ -94,9 +96,9 @@ class PostsList extends Component {
                             }).map((post) => {
                                 if(match) {
                                     if(match.params.category === post.category) {
-                                        return <PostItem post={post} key={post.id}></PostItem>
+                                        return <li key={post.id} ><PostItem post={post} key={post.id}></PostItem></li>
                                     }
-                                } else return <PostItem post={post} key={post.id}></PostItem>
+                                } else return <li key={post.id} ><PostItem post={post} key={post.id}></PostItem></li>
                             })}
                     </ul>}
                 </div>
