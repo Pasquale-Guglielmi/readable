@@ -6,7 +6,7 @@ import {LOADING_POSTS, LOADING_POSTS_ERROR,
         LOADING_CATEGORIES_ERROR, LOADING_CATEGORIES,
         LOADING_COMMENTS_ERROR, LOADING_COMMENTS} from '../actions/loading'
 import {GET_ALL_POSTS, CATEGORY_POSTS, VOTE_POST, GET_POST, DELETE_POST} from '../actions/posts'
-import {GET_COMMENTS, ADD_COMMENT} from '../actions/comments'
+import {GET_COMMENTS, ADD_COMMENT, GET_COMMENT} from '../actions/comments'
 import { combineReducers } from 'redux';
 
 function myCategories(state = {categories: null, loading: false, errorLoading: false}, action) {
@@ -142,7 +142,36 @@ function myComments(state = {commentsList: [], loading: false, errorLoading: fal
             return {
                 ...state,
                 commentsList: state.commentsList.push(comment),
+            };
+        case GET_COMMENT: {
+            const {comment} = action
+            const parent = comment.parentId
+            const updateCommentsList = state.commentsList.reduce((result, item) => {
+                if(item.parentId !== parent) {
+                    result.push(item)
+                    return result
+                } else {
+                    let updatedComments = item.comments.reduce((updated, comm) => {
+                        if(comm.id !== comment.id) {
+                            updated.push(comm)
+                            return updated
+                        } else {
+                            updated.push(comment)
+                            return updated
+                        }
+                    }, [])
+                    result.push({
+                        ...item,
+                        comments: updatedComments,
+                    })
+                    return result
+                }
+            }, [])
+            return {
+                ...state,
+                commentsList: updateCommentsList,
             }
+        };
         default:
             return state
     }

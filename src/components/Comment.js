@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import Like from 'react-icons/lib/fa/thumbs-up';
 import Unlike from 'react-icons/lib/fa/thumbs-down';
 import Close from 'react-icons/lib/fa/close';
-/*import {votePost, editPost, deletePost} from '../actions/posts';*/
+import {voteComment, deleteComment, editComment} from '../actions/comments';
 import Modal from 'react-modal';
 import '../styles/comments.css';
 
@@ -18,31 +18,22 @@ class Comment extends Component {
         detailsOpen: false,
     }
 
-    update(someProps) {
-    }
-
-    componentDidMount() {
-        this.update(this.props)
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.update(nextProps)
-    }
-
-/*    editHandler(event) {
+    editHandler(event) {
         event.preventDefault()
-        const title = this.titleInput.value
         const body = this.bodyInput.value
-        const {editPost, post} = this.props
-        if((title === post.title) && (body === post.body)) {
+        const {editComment, comment} = this.props
+        if(body === comment.body) {
             alert("No changes to be submitted")
             return
         }
         const data = {
-            title,
+            timestamp: Date.now(),
             body,
         }
-        editPost(data, post.id)
+        editComment(data, comment.id)
+        this.setState({
+            editModalOpen: false,
+        })
     }
 
     openEditModal = () => {
@@ -55,11 +46,11 @@ class Comment extends Component {
         this.setState({
             editModalOpen: false,
         })
-    }*/
+    }
 
-/*    deleteHandler() {
-        const {post, deletePost} = this.props
-        deletePost(post.id)
+    deleteHandler() {
+        const {comment, deleteComment} = this.props
+        deleteComment(comment)
     }
 
 
@@ -73,7 +64,7 @@ class Comment extends Component {
         this.setState({
             deleteModalOpen: false,
         })
-    }*/
+    }
 
     render() {
         const {comment, voteComment} = this.props
@@ -103,7 +94,7 @@ class Comment extends Component {
                             <Unlike size={20}/>
                         </button>
                     </div>
-{/*                    <div>
+{                    <div>
                         <button
                             className="edit-button"
                             onClick={() => {
@@ -118,9 +109,9 @@ class Comment extends Component {
                             }}>
                             Delete
                         </button>
-                    </div>*/}
+                    </div>}
                 </div>
-{/*                <Modal
+{               <Modal
                     className='modal'
                     overlayClassName='overlay'
                     isOpen={editModalOpen}
@@ -143,20 +134,11 @@ class Comment extends Component {
                                 this.editHandler(evt)
                             }}>
                             <label className="edit-input">
-                                Title:
-                                <textarea
-                                    required="true"
-                                    className="title-input"
-                                    defaultValue={post.title}
-                                    ref={(input) => this.titleInput = input}
-                                />
-                            </label>
-                            <label className="edit-input">
                                 Body:
                                 <textarea
                                     required="true"
                                     className="body-input"
-                                    defaultValue={post.body}
+                                    defaultValue={comment.body}
                                     ref={(input) => this.bodyInput = input}
                                 />
                             </label>
@@ -168,15 +150,15 @@ class Comment extends Component {
                             </input>
                         </form>
                     </div>
-                </Modal>*/}
-{/*                <Modal
+                </Modal>}
+{                <Modal
                     className='delete-modal'
                     overlayClassName='overlay'
                     isOpen={deleteModalOpen}
                     onRequestClose={this.closeDeleteModal}
                     contentLabel='Modal'
                 >
-                    <div className="delete-message">Are you sure you want delete this post?</div>
+                    <div className="delete-message">Are you sure you want delete this comment?</div>
                     <div className="delete-message-buttons">
                         <button
                             className="edit-button"
@@ -191,22 +173,22 @@ class Comment extends Component {
                             }}
                         >No</button>
                     </div>
-                </Modal>*/}
+                </Modal>}
             </div>
         )
     }
 }
 
 function mapStateToProps({myComments}) {
-    let comments = myComments.comments
+    let comments = myComments.commentsList
     return {comments}
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-     /*   deleteComment: (id) => dispatch(deleteComment(id)),
+        voteComment: (id, vote) => dispatch(voteComment(id, vote)),
+        deleteComment: (comment) => dispatch(deleteComment(comment)),
         editComment: (data, id) => dispatch(editComment(data, id)),
-        voteComment: (vote, id) => dispatch(voteComment(vote, id)),*/
     }
 }
 

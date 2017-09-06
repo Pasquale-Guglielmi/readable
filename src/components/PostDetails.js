@@ -38,7 +38,7 @@ class PostDetails extends Component {
         })
     }
 
-    updateComments(someProps) {
+    fetchComments(someProps) {
         const {setComments, match} = someProps
         const id = match.params.id
         setComments(id).then((res) => {
@@ -50,14 +50,27 @@ class PostDetails extends Component {
 
     }
 
+    updateComments(comments) {
+        const id = this.props.match.params.id
+        const updatedComments = comments.filter((item) => item.parentId === id)[0]
+        if(updatedComments) {
+            this.setState({
+                comments: updatedComments.comments
+            })
+        }
+    }
+
     componentDidMount() {
         this.updatePost(this.props)
-        this.updateComments(this.props)
+        this.fetchComments(this.props)
     }
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.posts !== this.props.posts) {
             this.updatePost(nextProps);
+        }
+        if(nextProps.myComments !== this.props.myComments) {
+            this.updateComments(nextProps.myComments.commentsList)
         }
     }
 
@@ -91,9 +104,11 @@ class PostDetails extends Component {
     }
 
     deleteHandler() {
-        const {deletePost} = this.props
+        const {deletePost, history} = this.props
         const {post} = this.state
-        deletePost(post.id)
+        deletePost(post.id).then(() => {
+            history.push('/')
+        })
     }
 
 
@@ -146,7 +161,7 @@ class PostDetails extends Component {
 
     render() {
         const {votePost} = this.props
-        const {editModalOpen, deleteModalOpen, post, comments, addCommentModalOpen} = this.state
+        const {editModalOpen, deleteModalOpen, post, addCommentModalOpen, comments} = this.state
         {if(post) {
             return (
                 <div className="post-item">
@@ -207,7 +222,9 @@ class PostDetails extends Component {
                         {(comments !== null && comments.length > 0) && <h3>Comments</h3>}
                         <ul className="comments-list">
                             {(comments !== null && comments.length > 0) &&
-                                comments.filter((item) => (!item.deleted)).map((item) => <Comment comment={item} key={item.id} className="comment-item"></Comment>)
+                                comments.filter((item) => (!item.deleted))
+                                    .sort((a, b) => b.voteScore - a.voteScore)
+                                    .map((item) => <Comment comment={item} key={item.id} className="comment-item"></Comment>)
                             }
                         </ul>
                     </div>

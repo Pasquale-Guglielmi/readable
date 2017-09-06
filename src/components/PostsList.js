@@ -87,11 +87,14 @@ class PostsList extends Component {
                         : (loadingError)? <div>Error loading posts!</div>
                         :((postsToShow.length === 0) && (!loading))? <div>No Posts Found!</div>
                         :<ul className="posts-list">
-                            {postsToShow.sort(function(a, b) {
-                                if(sort === "date") {
-                                    return b.timestamp - a.timestamp
-                                }else if(sort === "score") {
-                                    return b.voteScore - a.voteScore
+                            {postsToShow.sort((a, b) => {
+                                switch(sort) {
+                                    case "date":
+                                        return b.timestamp - a.timestamp;
+                                    case "score":
+                                        return b.voteScore - a.voteScore;
+                                    default:
+                                        return b.timestamp - a.timestamp;
                                 }
                             }).map((post) => {
                                 if(match) {

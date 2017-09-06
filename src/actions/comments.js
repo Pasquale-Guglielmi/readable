@@ -7,6 +7,14 @@ import {loadingComments, loadingCommentsError} from '../actions/loading'
 
 export const GET_COMMENTS = 'GET_COMMENTS';
 export const ADD_COMMENT = 'ADD_COMMENT';
+export const GET_COMMENT = 'GET_COMMENT';
+
+export function getComment(comment) {
+    return {
+        type: GET_COMMENT,
+        comment,
+    }
+}
 
 export function getComments({comments, parentId}) {
     return {
@@ -47,3 +55,31 @@ export function addNewComment(data) {
     }
 }
 
+export function voteComment(vote, id) {
+    return function (dispatch) {
+        return Api.voteComment(vote, id).then(() => {
+            Api.getCommentDetails(id).then((comment) => {
+                dispatch(getComment(comment))
+            })
+        })
+    }
+}
+
+export function deleteComment(comment) {
+    const {id, parentId} = comment
+    return function (dispatch) {
+        return Api.deleteComment(id).then(() => {
+            dispatch(getPostComments(parentId))
+        })
+    }
+}
+
+export function editComment(data, id) {
+    return function (dispatch) {
+        return Api.editComment(data, id).then(() => {
+            Api.getCommentDetails(id).then((comment) => {
+                dispatch(getComment(comment))
+            })
+        })
+    }
+}
