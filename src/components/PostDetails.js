@@ -16,6 +16,7 @@ import '../styles/postsList.css';
 import Modal from 'react-modal';
 import Comment from './Comment';
 import {addNewComment} from '../actions/comments';
+import uuidv1 from 'uuid/v1';
 
 class PostDetails extends Component {
     state = {
@@ -24,6 +25,7 @@ class PostDetails extends Component {
         deleteModalOpen: false,
         detailsOpen: false,
         post: null,
+        addCommentModalOpen: false,
     }
 
 
@@ -110,7 +112,18 @@ class PostDetails extends Component {
     addCommentHandler() {
         const {addComment} = this.props
         const {post} = this.state
-        addComment(post.id)
+        const data = {
+            id: uuidv1(),
+            timestamp: Date.now(),
+            body: this.newCommentBody.value,
+            author: this.newCommentOwner.value,
+            parentId: post.id,
+        }
+        addComment(data).then(() => {
+            this.setState({
+                addCommentModalOpen: false,
+            })
+        })
     }
 
 
@@ -133,7 +146,7 @@ class PostDetails extends Component {
 
     render() {
         const {votePost} = this.props
-        const {editModalOpen, deleteModalOpen, post, comments} = this.state
+        const {editModalOpen, deleteModalOpen, post, comments, addCommentModalOpen} = this.state
         {if(post) {
             return (
                 <div className="post-item">
@@ -273,7 +286,7 @@ class PostDetails extends Component {
                     <Modal
                         className='modal'
                         overlayClassName='overlay'
-                        isOpen={editModalOpen}
+                        isOpen={addCommentModalOpen}
                         onRequestClose={this.closeAddCommentModal}
                         contentLabel='Modal'
                     >
@@ -281,7 +294,7 @@ class PostDetails extends Component {
                             <button
                                 className="icon-btn close"
                                 onClick={() => {
-                                    this.closeAddCommentModal
+                                    this.closeAddCommentModal()
                                 }}>
                                 <Close size={20}></Close>
                             </button>
@@ -290,24 +303,15 @@ class PostDetails extends Component {
                             <form
                                 className="edit-main"
                                 onSubmit={(evt) => {
-                                    this.addPostHandler(evt)
+                                    this.addCommentHandler(evt)
                                 }}>
                                 <label className="edit-input">
-                                    Title:
+                                    Owner:
                                     <textarea
                                         required="true"
                                         className="title-input"
-                                        placeholder="post title"
-                                        ref={(input) => this.newPostTitle = input}
-                                    />
-                                </label>
-                                <label className="edit-input">
-                                    Author:
-                                    <textarea
-                                        required="true"
-                                        className="title-input"
-                                        placeholder="author name"
-                                        ref={(input) => this.newPostAuthor = input}
+                                        placeholder="type your name"
+                                        ref={(input) => this.newCommentOwner = input}
                                     />
                                 </label>
                                 <label className="edit-input">
@@ -315,16 +319,10 @@ class PostDetails extends Component {
                                     <textarea
                                         required="true"
                                         className="body-input"
-                                        placeholder="post body"
-                                        ref={(input) => this.newPostBody = input}
+                                        placeholder="comment body"
+                                        ref={(input) => this.newCommentBody = input}
                                     />
                                 </label>
-                                <select required ref={(input) => this.newPostCategory = input} className="top-button">
-                                    <option value="">Select a category</option>
-                                    <option value="react">react</option>
-                                    <option value="redux">redux</option>
-                                    <option value="udacity">udacity</option>
-                                </select>
                                 <input
                                     type="submit"
                                     value="Submit"
