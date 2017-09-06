@@ -26,6 +26,7 @@ class PostDetails extends Component {
         detailsOpen: false,
         post: null,
         addCommentModalOpen: false,
+        sort: "",
     }
 
 
@@ -72,6 +73,17 @@ class PostDetails extends Component {
         if(nextProps.myComments !== this.props.myComments) {
             this.updateComments(nextProps.myComments.commentsList)
         }
+    }
+
+    handleSelect(event) {
+        let {value} = event.target
+        if (!value) {
+            return
+        }
+        event.preventDefault()
+        this.setState({
+            sort: value,
+        })
     }
 
     editHandler(event) {
@@ -161,7 +173,7 @@ class PostDetails extends Component {
 
     render() {
         const {votePost} = this.props
-        const {editModalOpen, deleteModalOpen, post, addCommentModalOpen, comments} = this.state
+        const {editModalOpen, deleteModalOpen, post, addCommentModalOpen, comments, sort} = this.state
         {if(post) {
             return (
                 <div className="post-item">
@@ -219,11 +231,28 @@ class PostDetails extends Component {
                         </div>
                     </div>
                     <div className="comments">
-                        {(comments !== null && comments.length > 0) && <h3>Comments</h3>}
+                        {(comments !== null && comments.length > 0) &&
+                        <div>
+                            <h3>Comments</h3>
+                            <select onChange={this.handleSelect.bind(this)} className="top-button">
+                                <option defaultValue="">Sort comments by</option>
+                                <option value="date">date</option>
+                                <option value="score">score</option>
+                            </select>
+                        </div>}
                         <ul className="comments-list">
                             {(comments !== null && comments.length > 0) &&
                                 comments.filter((item) => (!item.deleted))
-                                    .sort((a, b) => b.voteScore - a.voteScore)
+                                    .sort((a, b) => {
+                                        switch(sort) {
+                                            case "date":
+                                                return b.timestamp - a.timestamp;
+                                            case "score":
+                                                return b.voteScore - a.voteScore;
+                                            default:
+                                                return b.timestamp - a.timestamp;
+                                        }
+                                    })
                                     .map((item) => <Comment comment={item} key={item.id} className="comment-item"></Comment>)
                             }
                         </ul>
