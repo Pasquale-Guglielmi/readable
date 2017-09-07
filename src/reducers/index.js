@@ -5,9 +5,31 @@ import {GET_CATEGORIES} from '../actions/categories'
 import {LOADING_POSTS, LOADING_POSTS_ERROR,
         LOADING_CATEGORIES_ERROR, LOADING_CATEGORIES,
         LOADING_COMMENTS_ERROR, LOADING_COMMENTS} from '../actions/loading'
-import {GET_ALL_POSTS, CATEGORY_POSTS, VOTE_POST, GET_POST, DELETE_POST} from '../actions/posts'
+import {GET_ALL_POSTS,
+        CATEGORY_POSTS,
+        VOTE_POST,
+        GET_POST,
+        DELETE_POST,
+        OPEN_ADD_POST_MODAL,
+        CLOSE_ADD_POST_MODAL} from '../actions/posts'
 import {GET_COMMENTS, ADD_COMMENT, GET_COMMENT} from '../actions/comments'
+import {SORT} from '../actions/utils'
 import { combineReducers } from 'redux';
+
+
+
+function myApp(state = {sort: "", addPostModalOpen: false, deletePostModalOpen: false, addCommentModalOpen: false, deleteCommentModalOpen: false,}, action) {
+    switch(action.type) {
+        case SORT:
+            const {by} = action
+            return {
+                ...state,
+                sort: by,
+            };
+        default:
+            return state
+    }
+}
 
 function myCategories(state = {categories: null, loading: false, errorLoading: false}, action) {
     const {categories, hasErrored, isLoading} = action
@@ -38,12 +60,12 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
         case GET_ALL_POSTS:
             return {
                 ...state,
-                posts,
+                posts: posts.filter((item) => item.deleted === false),
             };
         case CATEGORY_POSTS:
             return {
                 ...state,
-                posts: posts,
+                posts: posts.filter((item) => item.deleted === false),
             };
         case LOADING_POSTS:
             return {
@@ -75,6 +97,16 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
                 ...state,
                 posts: postsUpdated
             };
+        case OPEN_ADD_POST_MODAL: 
+            return {
+                ...state,
+                addPostModalOpen: true,
+            };
+        case CLOSE_ADD_POST_MODAL:
+            return {
+                ...state,
+                addPostModalOpen: false,
+            };
         case GET_POST:
             const {post} = action
             const updatedPosts = state.posts.reduce((result, item) => {
@@ -82,7 +114,9 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
                     result.push(item)
                     return result
                 } else {
-                    result.push(post)
+                    result.push(
+                        Object.assign({}, item, post)
+                    )
                     return result
                 }
             }, [])
@@ -96,8 +130,6 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
                     result.push(item)
                     return result
                 } else {
-                    item.deleted = true
-                    result.push(item)
                     return result
                 }
             }, [])
@@ -181,4 +213,5 @@ export default combineReducers({
     myCategories: myCategories,
     myPosts: myPosts,
     myComments: myComments,
+    myApp: myApp,
 })

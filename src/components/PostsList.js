@@ -10,40 +10,26 @@ import Loading from 'react-loading';
 import Close from 'react-icons/lib/fa/close';
 import Modal from 'react-modal';
 import uuidv1 from 'uuid/v1';
-import {addNewPost} from '../actions/posts';
+import {addNewPost,
+        openAddPostModal,
+        closeAddPostModal} from '../actions/posts';
+import {sort} from '../actions/utils';
 
 class PostsList extends Component {
-    state = ({
-        sort: "",
-        addPostModalOpen: false,
-    })
 
     handleSelect(event) {
+        const {sortItems} = this.props
         let {value} = event.target
         if (!value) {
             return
         }
         event.preventDefault()
-        this.setState({
-            sort: value,
-        })
-    }
-
-    openAddPostModal = () => {
-        this.setState({
-            addPostModalOpen: true,
-        })
-    }
-
-    closeAddPostModal = () => {
-        this.setState({
-            addPostModalOpen: false,
-        })
+        sortItems(value)
     }
 
     addPostHandler(evt) {
         evt.preventDefault()
-        const {addNewPost} = this.props
+        const {addNewPost, closeAddPostModal} = this.props
         const data = {
             id: uuidv1(),
             timestamp: Date.now(),
@@ -53,16 +39,12 @@ class PostsList extends Component {
             category: this.newPostCategory.value
         }
         addNewPost(data).then(() => {
-            this.setState({
-                addPostModalOpen: false,
-            })
+            closeAddPostModal()
         })
     }
 
     render() {
-        const {loadingError, loading, match, posts} = this.props
-        const {sort, addPostModalOpen} = this.state
-        let postsToShow = posts.filter((post) => !post.deleted)
+        const {loadingError, loading, match, posts, addPostModalOpen, openAddPostModal, closeAddPostModal, sort} = this.props
         return (
             <div>
                 {(!loading) && (
@@ -76,7 +58,7 @@ class PostsList extends Component {
                             </select>
                             <button
                                 className="top-button"
-                                onClick={() => {this.openAddPostModal()}}
+                                onClick={() => {openAddPostModal()}}
                             >Add Post</button>
                         </div>
 
@@ -85,9 +67,9 @@ class PostsList extends Component {
                 <div className="posts-container">
                     {(loading)? <Loading delay={200} type='spin' color='#222' className='loading'></Loading>
                         : (loadingError)? <div>Error loading posts!</div>
-                        :((postsToShow.length === 0) && (!loading))? <div>No Posts Found!</div>
+                        :((posts.length === 0) && (!loading))? <div>No Posts Found!</div>
                         :<ul className="posts-list">
-                            {postsToShow.sort((a, b) => {
+                            {posts.sort((a, b) => {
                                 switch(sort) {
                                     case "date":
                                         return b.timestamp - a.timestamp;
@@ -109,14 +91,14 @@ class PostsList extends Component {
                     className='modal'
                     overlayClassName='overlay'
                     isOpen={addPostModalOpen}
-                    onRequestClose={this.closeAddPostModal}
+                    onRequestClose={closeAddPostModal}
                     contentLabel='Modal'
                 >
                     <div className="close-modal-btn">
                         <button
                             className="icon-btn close"
                             onClick={() => {
-                                this.closeAddPostModal()
+                                closeAddPostModal()
                             }}>
                             <Close size={20}></Close>
                         </button>
@@ -174,13 +156,16 @@ class PostsList extends Component {
     }
 }
 
-function mapStateToProps({myPosts}) {
-    return {...myPosts}
+function mapStateToProps({myPosts, myApp}) {
+    return {...myPosts, ...myApp}
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         addNewPost: (data) => dispatch(addNewPost(data)),
+        openAddPostModal: () => dispatch(openAddPostModal()),
+        closeAddPostModal: () => dispatch(closeAddPostModal()),
+        sortItems: (by) => dispatch(sort(by)),
     }
 }
 

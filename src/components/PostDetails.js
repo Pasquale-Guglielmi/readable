@@ -23,10 +23,9 @@ class PostDetails extends Component {
         comments: null,
         editModalOpen: false,
         deleteModalOpen: false,
-        detailsOpen: false,
-        post: null,
         addCommentModalOpen: false,
         sort: "",
+        post: null,
     }
 
 

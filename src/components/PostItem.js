@@ -16,7 +16,6 @@ class PostItem extends Component {
         commentsCount: null,
         editModalOpen: false,
         deleteModalOpen: false,
-        detailsOpen: false,
     }
 
     update(someProps) {
@@ -33,9 +32,9 @@ class PostItem extends Component {
         this.update(this.props)
     }
 
-    componentWillReceiveProps(nextProps) {
+    /*componentWillReceiveProps(nextProps) {
         this.update(nextProps)
-    }
+    }*/
 
     editHandler(event) {
         event.preventDefault()

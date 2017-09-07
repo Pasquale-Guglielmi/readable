@@ -78,7 +78,7 @@ export function editComment(data, id) {
     return function (dispatch) {
         return Api.editComment(data, id).then(() => {
             Api.getCommentDetails(id).then((comment) => {
-                dispatch(getComment(comment))
+                dispatch()
             })
         })
     }
