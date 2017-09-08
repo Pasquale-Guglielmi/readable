@@ -9,22 +9,39 @@ import {GET_ALL_POSTS,
         CATEGORY_POSTS,
         VOTE_POST,
         GET_POST,
-        DELETE_POST,
-        OPEN_ADD_POST_MODAL,
-        CLOSE_ADD_POST_MODAL} from '../actions/posts'
+        DELETE_POST,} from '../actions/posts'
 import {GET_COMMENTS, ADD_COMMENT, GET_COMMENT} from '../actions/comments'
-import {SORT} from '../actions/utils'
+import {SORT,
+        OPEN_DELETE_MODAL,
+        CLOSE_DELETE_MODAL,} from '../actions/utils'
 import { combineReducers } from 'redux';
 
 
 
-function myApp(state = {sort: "", addPostModalOpen: false, deletePostModalOpen: false, addCommentModalOpen: false, deleteCommentModalOpen: false,}, action) {
+function myApp(state = {sort: "", deleteModal: {open: false, id: null}, addCommentModalOpen: false, deleteCommentModalOpen: false,}, action) {
     switch(action.type) {
         case SORT:
             const {by} = action
             return {
                 ...state,
                 sort: by,
+            };
+        case OPEN_DELETE_MODAL:
+            const {id} = action
+            return {
+                ...state,
+                deleteModal: {
+                    open: true,
+                    id,
+                }
+            };
+        case CLOSE_DELETE_MODAL:
+            return {
+                ...state,
+                deleteModal: {
+                    open: false,
+                    id: null,
+                }
             };
         default:
             return state
@@ -97,16 +114,6 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
                 ...state,
                 posts: postsUpdated
             };
-        case OPEN_ADD_POST_MODAL: 
-            return {
-                ...state,
-                addPostModalOpen: true,
-            };
-        case CLOSE_ADD_POST_MODAL:
-            return {
-                ...state,
-                addPostModalOpen: false,
-            };
         case GET_POST:
             const {post} = action
             const updatedPosts = state.posts.reduce((result, item) => {
@@ -125,14 +132,7 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
                 posts: updatedPosts
             };
         case DELETE_POST: {
-            const posts = state.posts.reduce((result, item) => {
-                if(item.id !== action.id) {
-                    result.push(item)
-                    return result
-                } else {
-                    return result
-                }
-            }, [])
+            const posts = state.posts.filter((item) => item.id !== action.id)
             return {
                 ...state,
                 posts: posts,

@@ -10,21 +10,8 @@ export const CATEGORY_POSTS = 'CATEGORY_POSTS';
 export const GET_POST = 'GET_POST';
 export const VOTE_POST = 'VOTE_POST';
 export const DELETE_POST = 'DELETE_POST';
-export const OPEN_ADD_POST_MODAL = 'OPEN_ADD_POST_MODAL';
-export const CLOSE_ADD_POST_MODAL = 'CLOSE_ADD_POST_MODAL';
 
 
-export function openAddPostModal() {
-    return {
-        type: OPEN_ADD_POST_MODAL,
-    }
-}
-
-export function closeAddPostModal() {
-    return {
-        type: CLOSE_ADD_POST_MODAL,
-    }
-}
 
 export function posts(posts) {
     return {

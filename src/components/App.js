@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import '../styles/App.css';
 import Home from './Home';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import PostsList from './PostsList';
 /*import * as Api from '../utils/Api';*/
 import PostDetails from './PostDetails';
+import AddPost from './AddPost'
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Route exact path='/' component={Home}/>
-        <Route exact path='/:category' component={PostsList}/>
-          <Route exact path='/:category/:id' component={PostDetails}/>
+        <Switch>
+            <Route path='/post/:id' component={AddPost}/>
+            <Route path='/post' component={AddPost}/>
+            <Route exact path='/' component={Home}/>
+            <Route exact path='/:category' component={PostsList}/>
+            <Route exact path='/:category/:id' component={PostDetails}/>
+        </Switch>
       </div>
     )
   }

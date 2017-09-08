@@ -10,31 +10,32 @@ import Close from 'react-icons/lib/fa/close';
 import {getPostComments} from '../actions/comments';
 import {votePost, editPost, deletePost} from '../actions/posts';
 import Modal from 'react-modal';
+import {openAddPostModal,
+    closeAddPostModal,
+    openDeleteModal,
+    closeDeleteModal} from '../actions/utils';
 
 class PostItem extends Component {
     state = {
-        commentsCount: null,
         editModalOpen: false,
-        deleteModalOpen: false,
     }
 
     update(someProps) {
-        const {post, setComments} = someProps;
-        setComments(post.id).then((res) => {
-            const comments = res.comments.filter((item) => (!item.deleted))
-            this.setState({
-                commentsCount: comments.length
-            })
-        })
+        const {post, getComments} = someProps;
+        getComments(post.id)
+    }
+
+    getPostComments() {
+        const {comments, post} = this.props
+        const postComments = comments.filter((item) => item.parentId === post.id)
+        if(postComments.length > 0) {
+            return postComments[0].comments
+        } else return []
     }
 
     componentDidMount() {
         this.update(this.props)
     }
-
-    /*componentWillReceiveProps(nextProps) {
-        this.update(nextProps)
-    }*/
 
     editHandler(event) {
         event.preventDefault()
@@ -64,27 +65,28 @@ class PostItem extends Component {
         })
     }
 
-    deleteHandler() {
-        const {post, deletePost} = this.props
-        deletePost(post.id)
+    deleteHandler(id) {
+        const {deletePost} = this.props
+        deletePost(id).then(() => {
+            this.closeDeleteModal()
+        })
     }
     
 
     openDeleteModal = () => {
-        this.setState({
-            deleteModalOpen: true,
-        })
+        const {openDeleteModal, post} = this.props
+        openDeleteModal(post.id)
     }
 
-    closeDeleteModal = () => {
-        this.setState({
-            deleteModalOpen: false,
-        })
+    closeDeleteModal() {
+        const {closeDeleteModal} = this.props
+        closeDeleteModal()
     }
 
     render() {
-        const {post, votePost} = this.props
-        const {editModalOpen, deleteModalOpen} = this.state
+        const {post, votePost, deleteModal} = this.props
+        const {editModalOpen} = this.state
+        const comments = this.getPostComments()
         return (
             <div className="post-item">
                 <Link to={`/${post.category}/${post.id}`} className="post-top">
@@ -110,7 +112,7 @@ class PostItem extends Component {
                         </button>
                     </div>
                     <div className="comments-count">
-                        {(this.state.commentsCount !== null) && `${this.state.commentsCount} comments`}
+                        {(comments) && `${comments.length} comments`}
                     </div>
                     <div>
                         <button
@@ -181,7 +183,7 @@ class PostItem extends Component {
                 <Modal
                     className='delete-modal'
                     overlayClassName='overlay'
-                    isOpen={deleteModalOpen}
+                    isOpen={deleteModal.open}
                     onRequestClose={this.closeDeleteModal}
                     contentLabel='Modal'
                 >
@@ -190,7 +192,7 @@ class PostItem extends Component {
                         <button
                             className="edit-button"
                             onClick={() => {
-                                this.deleteHandler()
+                                this.deleteHandler(deleteModal.id)
                             }}
                         >Yes</button>
                         <button
@@ -206,17 +208,20 @@ class PostItem extends Component {
     }
 }
 
-function mapStateToProps({myPosts}) {
+function mapStateToProps({myPosts, myApp, myComments}) {
     let posts = myPosts.posts
-    return {posts}
+    let comments = myComments.commentsList
+    return {posts, comments, ...myApp}
 }
 
 function mapDispatchToProps(dispatch) {
     return {
+        openDeleteModal: (id) => dispatch(openDeleteModal(id)),
+        closeDeleteModal: () => dispatch(closeDeleteModal()),
         deletePost: (id) => dispatch(deletePost(id)),
         editPost: (data, id) => dispatch(editPost(data, id)),
         votePost: (vote, id) => dispatch(votePost(vote, id)),
-        setComments: (data) => dispatch(getPostComments(data)),
+        getComments: (data) => dispatch(getPostComments(data)),
     }
 }
 

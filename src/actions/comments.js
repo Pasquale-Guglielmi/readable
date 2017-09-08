@@ -33,7 +33,6 @@ export function addComment(comment) {
 
 export function getPostComments(id) {
     return function(dispatch) {
-        dispatch(loadingComments(true))
         return Api.getPostComments(id).then((items) => {
                 dispatch(loadingComments(false))
                 return dispatch(getComments({comments: items, parentId: id}))
@@ -78,7 +77,7 @@ export function editComment(data, id) {
     return function (dispatch) {
         return Api.editComment(data, id).then(() => {
             Api.getCommentDetails(id).then((comment) => {
-                dispatch()
+                dispatch(getComment(comment))
             })
         })
     }

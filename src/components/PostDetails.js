@@ -17,12 +17,12 @@ import Modal from 'react-modal';
 import Comment from './Comment';
 import {addNewComment} from '../actions/comments';
 import uuidv1 from 'uuid/v1';
+import {openDeleteModal,
+        closeDeleteModal} from '../actions/utils';
 
 class PostDetails extends Component {
     state = {
-        comments: null,
         editModalOpen: false,
-        deleteModalOpen: false,
         addCommentModalOpen: false,
         sort: "",
         post: null,
@@ -30,47 +30,31 @@ class PostDetails extends Component {
 
 
     updatePost(someProps) {
-        const {posts, match} = someProps;
+        const {posts, match, getComments} = someProps;
         const id = match.params.id
+        getComments(id)
         const post = posts.filter((item) => (item.id === id))[0]
         this.setState({
             post: post,
         })
     }
 
-    fetchComments(someProps) {
-        const {setComments, match} = someProps
+    getPostComments() {
+        const {comments, match} = this.props
         const id = match.params.id
-        setComments(id).then((res) => {
-            const {comments} = res
-            this.setState({
-                comments: comments,
-            })
-        })
-
-    }
-
-    updateComments(comments) {
-        const id = this.props.match.params.id
-        const updatedComments = comments.filter((item) => item.parentId === id)[0]
-        if(updatedComments) {
-            this.setState({
-                comments: updatedComments.comments
-            })
-        }
+        const postComments = comments.filter((item) => item.parentId === id)
+        if(postComments.length > 0) {
+            return postComments[0].comments
+        } else return []
     }
 
     componentDidMount() {
         this.updatePost(this.props)
-        this.fetchComments(this.props)
     }
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.posts !== this.props.posts) {
             this.updatePost(nextProps);
-        }
-        if(nextProps.myComments !== this.props.myComments) {
-            this.updateComments(nextProps.myComments.commentsList)
         }
     }
 
@@ -114,25 +98,24 @@ class PostDetails extends Component {
         })
     }
 
-    deleteHandler() {
+    deleteHandler(id) {
         const {deletePost, history} = this.props
-        const {post} = this.state
-        deletePost(post.id).then(() => {
-            history.push('/')
+        deletePost(id).then(() => {
+            this.closeDeleteModal()
+            history.push("/")
         })
     }
 
 
     openDeleteModal = () => {
-        this.setState({
-            deleteModalOpen: true,
-        })
+        const {openDeleteModal} = this.props
+        const {post} = this.state
+        openDeleteModal(post.id)
     }
 
-    closeDeleteModal = () => {
-        this.setState({
-            deleteModalOpen: false,
-        })
+    closeDeleteModal() {
+        const {closeDeleteModal} = this.props
+        closeDeleteModal()
     }
 
     addCommentHandler() {
@@ -171,8 +154,9 @@ class PostDetails extends Component {
     }
 
     render() {
-        const {votePost} = this.props
-        const {editModalOpen, deleteModalOpen, post, addCommentModalOpen, comments, sort} = this.state
+        const {votePost, deleteModal} = this.props
+        const {editModalOpen, post, addCommentModalOpen, sort} = this.state
+        const comments = this.getPostComments()
         {if(post) {
             return (
                 <div className="post-item">
@@ -203,7 +187,7 @@ class PostDetails extends Component {
                             </button>
                         </div>
                         <div className="comments-count">
-                            {(comments !== null) && `${comments.length} comments`}
+                            {(comments) && `${comments.length} comments`}
                         </div>
                         <div>
                             <button
@@ -308,7 +292,7 @@ class PostDetails extends Component {
                     <Modal
                         className='delete-modal'
                         overlayClassName='overlay'
-                        isOpen={deleteModalOpen}
+                        isOpen={deleteModal.open}
                         onRequestClose={this.closeDeleteModal}
                         contentLabel='Modal'
                     >
@@ -317,7 +301,7 @@ class PostDetails extends Component {
                             <button
                                 className="edit-button"
                                 onClick={() => {
-                                    this.deleteHandler()
+                                    this.deleteHandler(deleteModal.id)
                                 }}
                             >Yes</button>
                             <button
@@ -386,17 +370,20 @@ class PostDetails extends Component {
     }
 }
 
-function mapStateToProps({myPosts, myComments}) {
+function mapStateToProps({myPosts, myComments, myApp}) {
     let posts = myPosts.posts
-    return {posts, myComments}
+    let comments = myComments.commentsList
+    return {posts, comments, ...myApp}
 }
 
 function mapDispatchToProps(dispatch) {
     return {
+        openDeleteModal: (id) => dispatch(openDeleteModal(id)),
+        closeDeleteModal: () => dispatch(closeDeleteModal()),
         deletePost: (id) => dispatch(deletePost(id)),
         editPost: (data, id) => dispatch(editPost(data, id)),
         votePost: (vote, id) => dispatch(votePost(vote, id)),
-        setComments: (data) => dispatch(getPostComments(data)),
+        getComments: (data) => dispatch(getPostComments(data)),
         addComment: (data) => dispatch(addNewComment(data)),
     }
 }
