@@ -1,0 +1,15 @@
+.main {
+    padding: 2em;
+    text-align: center;
+}
+
+.home-link {
+    border: 1px solid rgb(204, 204, 204);
+    box-shadow: 0 3px 8px 0 rgba(0,0,0,.24), 0 3px 12px 0 rgba(0,0,0,.12);
+    border-radius: 3px;
+    color: black;
+    padding: .5em;
+    margin: 3em auto;
+    display: block;
+    width: 100px;
+}
