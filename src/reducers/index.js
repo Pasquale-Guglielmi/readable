@@ -12,13 +12,11 @@ import {GET_ALL_POSTS,
         DELETE_POST,} from '../actions/posts'
 import {GET_COMMENTS, ADD_COMMENT, GET_COMMENT} from '../actions/comments'
 import {SORT,
-        OPEN_DELETE_MODAL,
-        CLOSE_DELETE_MODAL,} from '../actions/utils'
+        OPEN_MODAL,
+        CLOSE_MODAL,} from '../actions/utils'
 import { combineReducers } from 'redux';
 
-
-
-function myApp(state = {sort: "", deleteModal: {open: false, id: null}, addCommentModalOpen: false, deleteCommentModalOpen: false,}, action) {
+function myApp(state = {sort: "", modal: {open: false, id: null, which: null,}}, action){
     switch(action.type) {
         case SORT:
             const {by} = action
@@ -26,21 +24,23 @@ function myApp(state = {sort: "", deleteModal: {open: false, id: null}, addComme
                 ...state,
                 sort: by,
             };
-        case OPEN_DELETE_MODAL:
-            const {id} = action
+        case OPEN_MODAL:
+            const {id, which} = action
             return {
                 ...state,
-                deleteModal: {
+                modal: {
                     open: true,
                     id,
+                    which,
                 }
             };
-        case CLOSE_DELETE_MODAL:
+        case CLOSE_MODAL:
             return {
                 ...state,
-                deleteModal: {
+                modal: {
                     open: false,
                     id: null,
+                    which: null,
                 }
             };
         default:

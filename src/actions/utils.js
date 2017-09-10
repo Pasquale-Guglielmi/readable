@@ -3,10 +3,8 @@
  */
 
 export const SORT = 'SORT';
-export const OPEN_ADD_POST_MODAL = 'OPEN_ADD_POST_MODAL';
-export const CLOSE_ADD_POST_MODAL = 'CLOSE_ADD_POST_MODAL';
-export const OPEN_DELETE_MODAL = 'OPEN_DELETE_MODAL';
-export const CLOSE_DELETE_MODAL = 'CLOSE_DELETE_MODAL';
+export const OPEN_MODAL = 'OPEN_MODAL';
+export const CLOSE_MODAL = 'CLOSE_MODAL';
 
 export function sort(by) {
     return {
@@ -15,28 +13,17 @@ export function sort(by) {
     }
 }
 
-export function openAddPostModal() {
+export function openModal({id, which}) {
     return {
-        type: OPEN_ADD_POST_MODAL,
-    }
-}
-
-export function closeAddPostModal() {
-    return {
-        type: CLOSE_ADD_POST_MODAL,
-    }
-}
-
-export function openDeleteModal(id) {
-    return {
-        type: OPEN_DELETE_MODAL,
+        type: OPEN_MODAL,
         id,
+        which,
     }
 }
 
-export function closeDeleteModal() {
+export function closeModal() {
     return {
-        type: CLOSE_DELETE_MODAL,
+        type: CLOSE_MODAL,
     }
 }
 

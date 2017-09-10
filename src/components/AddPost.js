@@ -89,11 +89,6 @@ class AddPost extends Component {
     }
 }
 
-function mapStateToProps({myPosts}) {
-    let posts = myPosts.posts
-    return {posts}
-}
-
 function mapDispatchToProps(dispatch) {
     return {
         addNewPost: (data) => dispatch(addNewPost(data)),

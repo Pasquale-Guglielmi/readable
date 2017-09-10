@@ -9,8 +9,8 @@ import Unlike from 'react-icons/lib/fa/thumbs-down';
 import {getPostComments} from '../actions/comments';
 import {votePost, deletePost} from '../actions/posts';
 import Modal from 'react-modal';
-import {openDeleteModal,
-    closeDeleteModal} from '../actions/utils';
+import {openModal,
+    closeModal} from '../actions/utils';
 
 class PostItem extends Component {
 
@@ -33,20 +33,19 @@ class PostItem extends Component {
 
     deleteHandler(id) {
         const {deletePost} = this.props
-        deletePost(id).then(() => {
-            this.closeDeleteModal()
-        })
+        this.closeDeleteModal()
+        deletePost(id)
     }
     
 
     openDeleteModal = () => {
-        const {openDeleteModal, post} = this.props
-        openDeleteModal(post.id)
+        const {openModal, post} = this.props
+        openModal({id: post.id, which: "deletePost"})
     }
 
     closeDeleteModal() {
-        const {closeDeleteModal} = this.props
-        closeDeleteModal()
+        const {closeModal} = this.props
+        closeModal()
     }
 
     redirect(url) {
@@ -54,7 +53,7 @@ class PostItem extends Component {
     }
 
     render() {
-        const {post, votePost, deleteModal} = this.props
+        const {post, votePost, modal} = this.props
         const comments = this.getPostComments()
         return (
             <div className="post-item">
@@ -104,7 +103,7 @@ class PostItem extends Component {
                 <Modal
                     className='delete-modal'
                     overlayClassName='overlay'
-                    isOpen={deleteModal.open}
+                    isOpen={(modal.open) && (modal.which === "deletePost")}
                     onRequestClose={this.closeDeleteModal}
                     contentLabel='Modal'
                 >
@@ -113,7 +112,7 @@ class PostItem extends Component {
                         <button
                             className="edit-button"
                             onClick={() => {
-                                this.deleteHandler(deleteModal.id)
+                                this.deleteHandler(modal.id)
                             }}
                         >Yes</button>
                         <button
@@ -137,8 +136,8 @@ function mapStateToProps({myPosts, myApp, myComments}) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        openDeleteModal: (id) => dispatch(openDeleteModal(id)),
-        closeDeleteModal: () => dispatch(closeDeleteModal()),
+        openModal: ({id, which}) => dispatch(openModal({id, which})),
+        closeModal: () => dispatch(closeModal()),
         deletePost: (id) => dispatch(deletePost(id)),
         votePost: (vote, id) => dispatch(votePost(vote, id)),
         getComments: (data) => dispatch(getPostComments(data)),
