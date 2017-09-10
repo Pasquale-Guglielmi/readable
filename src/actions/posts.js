@@ -6,7 +6,6 @@ import * as Api from '../utils/Api'
 import {loadingPostsError, loadingPosts} from './loading'
 
 export const GET_ALL_POSTS = 'GET_ALL_POSTS';
-export const CATEGORY_POSTS = 'CATEGORY_POSTS';
 export const GET_POST = 'GET_POST';
 export const VOTE_POST = 'VOTE_POST';
 export const DELETE_POST = 'DELETE_POST';
@@ -16,13 +15,6 @@ export const DELETE_POST = 'DELETE_POST';
 export function posts(posts) {
     return {
         type: GET_ALL_POSTS,
-        posts,
-    }
-}
-
-export function categoryPosts(posts) {
-    return {
-        type: CATEGORY_POSTS,
         posts,
     }
 }
@@ -64,22 +56,6 @@ export function fetchAllPosts() {
         )
     }
 }
-/*
-export function fetchCategoryPosts(category) {
-    return function (dispatch) {
-        dispatch(loadingPosts(true))
-        return Api.getCategoryPosts(category).then(
-            data => {
-                dispatch(loadingPosts(false))
-                dispatch(categoryPosts(data))
-            },
-            error => {
-                dispatch(loadingPosts(false))
-                dispatch(loadingPostsError())
-            }
-        )
-    }
-}*/
 
 export function fetchPost(id) {
     return function (dispatch) {

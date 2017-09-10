@@ -64,7 +64,7 @@ class PostDetails extends Component {
 
     deleteHandler(id) {
         const {deletePost} = this.props
-        this.closeDeleteModal()
+        this.closeModal()
         this.redirect("/")
         deletePost(id)
     }
@@ -74,11 +74,6 @@ class PostDetails extends Component {
         const {openModal} = this.props
         const post = this.fetchPost()
         openModal({id: post.id, which: "deletePost"})
-    }
-
-    closeDeleteModal() {
-        const {closeModal} = this.props
-        closeModal()
     }
 
     addCommentHandler() {
@@ -91,17 +86,16 @@ class PostDetails extends Component {
             parentId: match.params.id,
         }
         addComment(data).then(() => {
-            this.closeAddCommentModal()
+            this.closeModal()
         })
     }
-
 
     openAddCommentModal = () => {
         const {openModal, match} = this.props
         openModal({id: match.params.id, which: "addComment"})
     }
 
-    closeAddCommentModal = () => {
+    closeModal = () => {
         const {closeModal} = this.props
         closeModal()
     }
@@ -200,12 +194,11 @@ class PostDetails extends Component {
                             }
                         </ul>
                     </div>
-
                     <Modal
                         className='delete-modal'
                         overlayClassName='overlay'
                         isOpen={(modal.open) && (modal.which === "deletePost")}
-                        onRequestClose={this.closeDeleteModal}
+                        onRequestClose={this.closeModal}
                         contentLabel='Modal'
                     >
                         <div className="delete-message">Are you sure you want delete this post?</div>
@@ -219,7 +212,7 @@ class PostDetails extends Component {
                             <button
                                 className="edit-button"
                                 onClick={() => {
-                                    this.closeDeleteModal()
+                                    this.closeModal()
                                 }}
                             >No</button>
                         </div>
@@ -228,14 +221,14 @@ class PostDetails extends Component {
                         className='modal'
                         overlayClassName='overlay'
                         isOpen={(modal.open) && (modal.which === "addComment")}
-                        onRequestClose={this.closeAddCommentModal}
+                        onRequestClose={this.closeModal}
                         contentLabel='Modal'
                     >
                         <div className="close-modal-btn">
                             <button
                                 className="icon-btn close"
                                 onClick={() => {
-                                    this.closeAddCommentModal()
+                                    this.closeModal()
                                 }}>
                                 <Close size={20}></Close>
                             </button>

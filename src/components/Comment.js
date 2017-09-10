@@ -3,25 +3,20 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-/*import { Link } from 'react-router-dom';*/
+import '../styles/comments.css';
 import Like from 'react-icons/lib/fa/thumbs-up';
 import Unlike from 'react-icons/lib/fa/thumbs-down';
 import Close from 'react-icons/lib/fa/close';
 import {voteComment, deleteComment, editComment} from '../actions/comments';
+import {openModal, closeModal} from '../actions/utils';
 import Modal from 'react-modal';
-import '../styles/comments.css';
 
 class Comment extends Component {
-    state = {
-        editModalOpen: false,
-        deleteModalOpen: false,
-        detailsOpen: false,
-    }
 
     editHandler(event) {
         event.preventDefault()
-        const body = this.bodyInput.value
         const {editComment, comment} = this.props
+        const body = this.bodyInput.value
         if(body === comment.body) {
             alert("No changes to be submitted")
             return
@@ -30,45 +25,34 @@ class Comment extends Component {
             timestamp: Date.now(),
             body,
         }
+        this.closeModal()
         editComment(data, comment.id)
-        this.setState({
-            editModalOpen: false,
-        })
     }
 
     openEditModal = () => {
-        this.setState({
-            editModalOpen: true,
-        })
-    }
-
-    closeEditModal = () => {
-        this.setState({
-            editModalOpen: false,
-        })
+        const {openModal, comment} = this.props
+        openModal({id: comment.id, which: "editComment"})
     }
 
     deleteHandler() {
         const {comment, deleteComment} = this.props
+        this.closeModal()
         deleteComment(comment)
     }
 
 
     openDeleteModal = () => {
-        this.setState({
-            deleteModalOpen: true,
-        })
+        const {openModal, comment} = this.props
+        openModal({id: comment.id, which: "deleteComment"})
     }
 
-    closeDeleteModal = () => {
-        this.setState({
-            deleteModalOpen: false,
-        })
+    closeModal = () => {
+        const {closeModal} = this.props
+        closeModal()
     }
 
     render() {
-        const {comment, voteComment} = this.props
-        const {editModalOpen, deleteModalOpen} = this.state
+        const {comment, voteComment, modal} = this.props
         return (
             <div className="comment-item">
                     <h2>{comment.title}</h2>
@@ -114,15 +98,15 @@ class Comment extends Component {
 {               <Modal
                     className='modal'
                     overlayClassName='overlay'
-                    isOpen={editModalOpen}
-                    onRequestClose={this.closeEditModal}
+                    isOpen={(modal.open) && (modal.which === "editComment") && (modal.id === comment.id)}
+                    onRequestClose={this.closeModal}
                     contentLabel='Modal'
                 >
                     <div className="close-modal-btn">
                         <button
                             className="icon-btn close"
                             onClick={() => {
-                                this.closeEditModal()
+                                this.closeModal()
                             }}>
                             <Close size={20}></Close>
                         </button>
@@ -154,8 +138,8 @@ class Comment extends Component {
 {                <Modal
                     className='delete-modal'
                     overlayClassName='overlay'
-                    isOpen={deleteModalOpen}
-                    onRequestClose={this.closeDeleteModal}
+                    isOpen={(modal.open) && (modal.which === "deleteComment") && (modal.id === comment.id)}
+                    onRequestClose={this.closeModal}
                     contentLabel='Modal'
                 >
                     <div className="delete-message">Are you sure you want delete this comment?</div>
@@ -169,7 +153,7 @@ class Comment extends Component {
                         <button
                             className="edit-button"
                             onClick={() => {
-                                this.closeDeleteModal()
+                                this.closeModal()
                             }}
                         >No</button>
                     </div>
@@ -179,13 +163,16 @@ class Comment extends Component {
     }
 }
 
-function mapStateToProps({myComments}) {
+function mapStateToProps({myComments, myApp}) {
     let comments = myComments.commentsList
-    return {comments}
+    let modal = myApp.modal
+    return {comments, modal}
 }
 
 function mapDispatchToProps(dispatch) {
     return {
+        openModal: ({id, which}) => dispatch(openModal({id, which})),
+        closeModal: () => dispatch(closeModal()),
         voteComment: (id, vote) => dispatch(voteComment(id, vote)),
         deleteComment: (comment) => dispatch(deleteComment(comment)),
         editComment: (data, id) => dispatch(editComment(data, id)),

@@ -6,7 +6,6 @@ import {LOADING_POSTS, LOADING_POSTS_ERROR,
         LOADING_CATEGORIES_ERROR, LOADING_CATEGORIES,
         LOADING_COMMENTS_ERROR, LOADING_COMMENTS} from '../actions/loading'
 import {GET_ALL_POSTS,
-        CATEGORY_POSTS,
         VOTE_POST,
         GET_POST,
         DELETE_POST,} from '../actions/posts'
@@ -75,11 +74,6 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
     const {posts, hasErrored, isLoading} = action
     switch(action.type) {
         case GET_ALL_POSTS:
-            return {
-                ...state,
-                posts: posts.filter((item) => item.deleted === false),
-            };
-        case CATEGORY_POSTS:
             return {
                 ...state,
                 posts: posts.filter((item) => item.deleted === false),

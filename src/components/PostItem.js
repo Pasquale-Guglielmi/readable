@@ -32,7 +32,7 @@ class PostItem extends Component {
 
     deleteHandler(id) {
         const {deletePost} = this.props
-        this.closeDeleteModal()
+        this.closeModal()
         deletePost(id)
     }
     
@@ -42,7 +42,7 @@ class PostItem extends Component {
         openModal({id: post.id, which: "deletePost"})
     }
 
-    closeDeleteModal() {
+    closeModal() {
         const {closeModal} = this.props
         closeModal()
     }
@@ -102,8 +102,8 @@ class PostItem extends Component {
                 <Modal
                     className='delete-modal'
                     overlayClassName='overlay'
-                    isOpen={(modal.open) && (modal.which === "deletePost")}
-                    onRequestClose={this.closeDeleteModal}
+                    isOpen={(modal.open) && (modal.which === "deletePost") && (modal.id === post.id)}
+                    onRequestClose={this.closeModal}
                     contentLabel='Modal'
                 >
                     <div className="delete-message">Are you sure you want delete this post?</div>
@@ -117,7 +117,7 @@ class PostItem extends Component {
                         <button
                             className="edit-button"
                             onClick={() => {
-                                this.closeDeleteModal()
+                                this.closeModal()
                             }}
                         >No</button>
                     </div>
