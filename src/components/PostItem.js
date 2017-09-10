@@ -8,9 +8,8 @@ import Like from 'react-icons/lib/fa/thumbs-up';
 import Unlike from 'react-icons/lib/fa/thumbs-down';
 import {getPostComments} from '../actions/comments';
 import {votePost, deletePost} from '../actions/posts';
+import {openModal, closeModal} from '../actions/utils';
 import Modal from 'react-modal';
-import {openModal,
-    closeModal} from '../actions/utils';
 
 class PostItem extends Component {
 

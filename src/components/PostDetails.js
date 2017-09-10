@@ -7,24 +7,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import '../styles/postsList.css';
 import Like from 'react-icons/lib/fa/thumbs-up';
 import Unlike from 'react-icons/lib/fa/thumbs-down';
 import Close from 'react-icons/lib/fa/close';
-import {getPostComments} from '../actions/comments';
 import {votePost, deletePost, fetchAllPosts} from '../actions/posts';
-import '../styles/postsList.css';
+import {addNewComment, getPostComments} from '../actions/comments';
+import {openModal, closeModal, sort} from '../actions/utils';
 import Modal from 'react-modal';
 import Comment from './Comment';
-import {addNewComment} from '../actions/comments';
 import uuidv1 from 'uuid/v1';
-import {openModal,
-        closeModal,
-        sort} from '../actions/utils';
 
 class PostDetails extends Component {
-    state = {
-        addCommentModalOpen: false,
-    }
 
     fetchPost() {
         const {match, posts} = this.props
@@ -52,12 +46,6 @@ class PostDetails extends Component {
     componentDidMount() {
         this.update()
     }
-
-    /* componentWillReceiveProps(nextProps) {
-         if(nextProps.comments !== this.props.comments) {
-            this.update(nextProps)
-         }
-     }*/
 
     redirect(url) {
         const {history} = this.props
@@ -94,33 +82,28 @@ class PostDetails extends Component {
     }
 
     addCommentHandler() {
-        const {addComment} = this.props
-        const post = this.fetchPost()
+        const {addComment, match} = this.props
         const data = {
             id: uuidv1(),
             timestamp: Date.now(),
             body: this.newCommentBody.value,
             author: this.newCommentOwner.value,
-            parentId: post.id,
+            parentId: match.params.id,
         }
         addComment(data).then(() => {
-            this.setState({
-                addCommentModalOpen: false,
-            })
+            this.closeAddCommentModal()
         })
     }
 
 
     openAddCommentModal = () => {
-        this.setState({
-            addCommentModalOpen: true,
-        })
+        const {openModal, match} = this.props
+        openModal({id: match.params.id, which: "addComment"})
     }
 
     closeAddCommentModal = () => {
-        this.setState({
-            addCommentModalOpen: false,
-        })
+        const {closeModal} = this.props
+        closeModal()
     }
 
     formatDate(d) {
@@ -131,11 +114,12 @@ class PostDetails extends Component {
     render() {
         const post = this.fetchPost()
         const {votePost, modal, sort} = this.props
-        const {addCommentModalOpen} = this.state
+     /*   const {addCommentModalOpen} = this.state*/
         const comments = this.getPostComments()
         {if(post) {
             return (
                 <div className="post-item">
+                    <Link className="home-link" to="/">Home</Link>
                     <div className="post-details">
                         <h2>{post.title}</h2>
                         <p> by <strong>{post.author}</strong></p>
@@ -243,7 +227,7 @@ class PostDetails extends Component {
                     <Modal
                         className='modal'
                         overlayClassName='overlay'
-                        isOpen={addCommentModalOpen}
+                        isOpen={(modal.open) && (modal.which === "addComment")}
                         onRequestClose={this.closeAddCommentModal}
                         contentLabel='Modal'
                     >
