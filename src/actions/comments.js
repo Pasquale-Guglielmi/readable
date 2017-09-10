@@ -82,9 +82,3 @@ export function editComment(data, id) {
         })
     }
 }
-
-export function getCommentDetails(id) {
-    return function (dispatch) {
-        return Api.getCommentDetails(id)
-    }
-}
