@@ -1,21 +1,18 @@
 /**
  * Created by pasquale on 07/09/2017.
  */
-
-export const SORT = 'SORT';
-export const OPEN_MODAL = 'OPEN_MODAL';
-export const CLOSE_MODAL = 'CLOSE_MODAL';
+import * as constants from '../actions/constants'
 
 export function sort(by) {
     return {
-        type: SORT,
+        type: constants.SORT,
         by,
     }
 }
 
 export function openModal({id, which}) {
     return {
-        type: OPEN_MODAL,
+        type: constants.OPEN_MODAL,
         id,
         which,
     }
@@ -23,7 +20,7 @@ export function openModal({id, which}) {
 
 export function closeModal() {
     return {
-        type: CLOSE_MODAL,
+        type: constants.CLOSE_MODAL,
     }
 }
 

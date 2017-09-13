@@ -4,30 +4,26 @@
 
 import * as Api from '../utils/Api'
 import {loadingPostsError, loadingPosts} from './loading'
-
-export const GET_ALL_POSTS = 'GET_ALL_POSTS';
-export const GET_POST = 'GET_POST';
-export const VOTE_POST = 'VOTE_POST';
-export const DELETE_POST = 'DELETE_POST';
+import * as constants from '../actions/constants'
 
 
 export function posts(posts) {
     return {
-        type: GET_ALL_POSTS,
+        type: constants.GET_ALL_POSTS,
         posts,
     }
 }
 
 export function post(post) {
     return {
-        type: GET_POST,
+        type: constants.GET_POST,
         post,
     }
 }
 
 export function voteP(vote, id) {
     return {
-        type: VOTE_POST,
+        type: constants.VOTE_POST,
         vote: vote,
         id: id,
     }
@@ -35,7 +31,7 @@ export function voteP(vote, id) {
 
 export function deleteP(id) {
     return {
-        type: DELETE_POST,
+        type: constants.DELETE_POST,
         id,
     }
 }

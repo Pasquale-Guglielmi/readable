@@ -4,29 +4,25 @@
 
 import * as Api from '../utils/Api';
 import {loadingComments, loadingCommentsError} from '../actions/loading'
-
-export const GET_COMMENTS = 'GET_COMMENTS';
-export const ADD_COMMENT = 'ADD_COMMENT';
-export const GET_COMMENT = 'GET_COMMENT';
-export const DELETE_COMMENT = 'DELETE_COMMENT';
+import * as constants from '../actions/constants'
 
 export function removeComment(comment) {
     return {
-        type: DELETE_COMMENT,
+        type: constants.DELETE_COMMENT,
         comment,
     }
 }
 
 export function getComment(comment) {
     return {
-        type: GET_COMMENT,
+        type: constants.GET_COMMENT,
         comment,
     }
 }
 
 export function getComments({comments, parentId}) {
     return {
-        type: GET_COMMENTS,
+        type: constants.GET_COMMENTS,
         comments,
         parentId,
     }
@@ -34,7 +30,7 @@ export function getComments({comments, parentId}) {
 
 export function addComment(comment) {
     return {
-        type: ADD_COMMENT,
+        type: constants.ADD_COMMENT,
         comment
     }
 }

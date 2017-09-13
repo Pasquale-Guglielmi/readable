@@ -4,12 +4,11 @@
 
 import * as Api from '../utils/Api'
 import {loadingCategoriesError, loadingCategories} from './loading'
-
-export const GET_CATEGORIES = 'GET_CATEGORIES';
+import * as constants from '../actions/constants'
 
 export function categories({categories}) {
     return {
-        type: GET_CATEGORIES,
+        type: constants.GET_CATEGORIES,
         categories,
     }
 }

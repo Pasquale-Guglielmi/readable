@@ -1,0 +1,25 @@
+/**
+ * Created by pasquale on 13/09/2017.
+ */
+export const GET_CATEGORIES = 'GET_CATEGORIES';
+
+export const GET_COMMENTS = 'GET_COMMENTS';
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const GET_COMMENT = 'GET_COMMENT';
+export const DELETE_COMMENT = 'DELETE_COMMENT';
+
+export const LOADING_POSTS_ERROR = 'LOADING_POSTS_ERROR';
+export const LOADING_POSTS = 'LOADING_POSTS';
+export const LOADING_CATEGORIES_ERROR = 'LOADING_CATEGORIES_ERROR';
+export const LOADING_CATEGORIES = 'LOADING_CATEGORIES';
+export const LOADING_COMMENTS_ERROR = 'LOADING_COMMENTS_ERROR';
+export const LOADING_COMMENTS = 'LOADING_COMMENTS';
+
+export const GET_ALL_POSTS = 'GET_ALL_POSTS';
+export const GET_POST = 'GET_POST';
+export const VOTE_POST = 'VOTE_POST';
+export const DELETE_POST = 'DELETE_POST';
+
+export const SORT = 'SORT';
+export const OPEN_MODAL = 'OPEN_MODAL';
+export const CLOSE_MODAL = 'CLOSE_MODAL';
