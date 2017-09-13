@@ -42,57 +42,58 @@ class EditPost extends Component {
     }
 
     render() {
-        const post = this.fetchPost()
+        const {loading} = this.props
+        let post = this.fetchPost()
         return(
            <div className="main">
-               {(post)?
-               <div>
-                   <Link className="home-link" to="/">Home</Link>
-                   <div className="edit-post-header">
-                       <h2>Edit your post before submitting!</h2>
-                   </div>
-                   <div className="edit-main">
-                       <form
-                           className="edit-main"
-                           onSubmit={(evt) => {
-                               this.editHandler(evt)
-                           }}>
-                           <label className="edit-input">
-                               Title:
-                               <textarea
-                                   required="true"
-                                   className="title-input"
-                                   defaultValue={(post)? post.title : ""}
-                                   ref={(input) => this.titleInput = input}
-                               />
-                           </label>
-                           <label className="edit-input">
-                               Body:
-                               <textarea
-                                   required="true"
-                                   className="body-input"
-                                   defaultValue={(post)? post.body : ""}
-                                   ref={(input) => this.bodyInput = input}
-                               />
-                           </label>
-                           <input
-                               type="submit"
-                               value="Submit"
-                               className="edit-button"
-                           >
-                           </input>
-                       </form>
-                   </div>
-               </div>
-               : <Loading delay={200} type='spin' color='#222' className='loading'></Loading>}
+               {(loading)?  <Loading delay={200} type='spin' color='#222' className='loading'></Loading>
+                   :(post)? (post.deleted === true)? <div><h1>Sorry, this post was deleted!</h1></div>
+                       :<div>
+                           <Link className="home-link" to="/">Home</Link>
+                           <div className="edit-post-header">
+                               <h2>Edit your post before submitting!</h2>
+                           </div>
+                           <div className="edit-main">
+                               <form
+                                   className="edit-main"
+                                   onSubmit={(evt) => {
+                                       this.editHandler(evt)
+                                   }}>
+                                   <label className="edit-input">
+                                       Title:
+                                       <textarea
+                                           required="true"
+                                           className="title-input"
+                                           defaultValue={(post)? post.title : ""}
+                                           ref={(input) => this.titleInput = input}
+                                       />
+                                   </label>
+                                   <label className="edit-input">
+                                       Body:
+                                       <textarea
+                                           required="true"
+                                           className="body-input"
+                                           defaultValue={(post)? post.body : ""}
+                                           ref={(input) => this.bodyInput = input}
+                                       />
+                                   </label>
+                                   <input
+                                       type="submit"
+                                       value="Submit"
+                                       className="edit-button"
+                                   >
+                                   </input>
+                               </form>
+                           </div>
+                       </div>
+               : <div><h1>404 Post not found!</h1></div>}
            </div>
         )
     }
 }
 
 function mapStateToProps({myPosts}) {
-    let posts = myPosts.posts
-    return {posts}
+    return {...myPosts}
 }
 
 function mapDispatchToProps(dispatch) {

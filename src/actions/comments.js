@@ -8,6 +8,14 @@ import {loadingComments, loadingCommentsError} from '../actions/loading'
 export const GET_COMMENTS = 'GET_COMMENTS';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const GET_COMMENT = 'GET_COMMENT';
+export const DELETE_COMMENT = 'DELETE_COMMENT';
+
+export function removeComment(comment) {
+    return {
+        type: DELETE_COMMENT,
+        comment,
+    }
+}
 
 export function getComment(comment) {
     return {
@@ -65,10 +73,10 @@ export function voteComment(vote, id) {
 }
 
 export function deleteComment(comment) {
-    const {id, parentId} = comment
+    const {id} = comment
     return function (dispatch) {
         return Api.deleteComment(id).then(() => {
-            dispatch(getPostComments(parentId))
+            dispatch(removeComment(comment))
         })
     }
 }

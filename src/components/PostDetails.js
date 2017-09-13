@@ -17,6 +17,7 @@ import {openModal, closeModal, sort} from '../actions/utils';
 import Modal from 'react-modal';
 import Comment from './Comment';
 import uuidv1 from 'uuid/v1';
+import Loading from 'react-loading';
 
 class PostDetails extends Component {
 
@@ -107,12 +108,13 @@ class PostDetails extends Component {
 
     render() {
         const post = this.fetchPost()
-        const {votePost, modal, sort} = this.props
-     /*   const {addCommentModalOpen} = this.state*/
+        const {votePost, modal, sort, loading} = this.props
         const comments = this.getPostComments()
-        {if(post) {
             return (
-                <div className="post-item">
+                (loading)? <Loading delay={200} type='spin' color='#222' className='loading'></Loading>
+                    :(!post)? <div><h1>404 Post not found!</h1></div>
+                    :(post.deleted === true)? <div><h1>Sorry, this post was deleted!</h1></div>
+                    :<div className="post-item">
                     <Link className="home-link" to="/">Home</Link>
                     <div className="post-details">
                         <h2>{post.title}</h2>
@@ -179,18 +181,18 @@ class PostDetails extends Component {
                         </div>}
                         <ul className="comments-list">
                             {(comments !== null && comments.length > 0) &&
-                                comments.filter((item) => (!item.deleted))
-                                    .sort((a, b) => {
-                                        switch(sort) {
-                                            case "date":
-                                                return b.timestamp - a.timestamp;
-                                            case "score":
-                                                return b.voteScore - a.voteScore;
-                                            default:
-                                                return b.timestamp - a.timestamp;
-                                        }
-                                    })
-                                    .map((item) => <Comment comment={item} key={item.id} className="comment-item"></Comment>)
+                            comments.filter((item) => (!item.deleted))
+                                .sort((a, b) => {
+                                    switch(sort) {
+                                        case "date":
+                                            return b.timestamp - a.timestamp;
+                                        case "score":
+                                            return b.voteScore - a.voteScore;
+                                        default:
+                                            return b.timestamp - a.timestamp;
+                                    }
+                                })
+                                .map((item) => <Comment comment={item} key={item.id} className="comment-item"></Comment>)
                             }
                         </ul>
                     </div>
@@ -268,17 +270,12 @@ class PostDetails extends Component {
                     </Modal>
                 </div>
             )
-        }else {
-            return(<div>Loading post details...</div>)
-        }
-            }
     }
 }
 
 function mapStateToProps({myPosts, myComments, myApp}) {
-    let posts = myPosts.posts
     let comments = myComments.commentsList
-    return {posts, comments, ...myApp}
+    return {comments, ...myApp, ...myPosts}
 }
 
 function mapDispatchToProps(dispatch) {

@@ -11,7 +11,6 @@ export const VOTE_POST = 'VOTE_POST';
 export const DELETE_POST = 'DELETE_POST';
 
 
-
 export function posts(posts) {
     return {
         type: GET_ALL_POSTS,

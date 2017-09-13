@@ -9,7 +9,7 @@ import {GET_ALL_POSTS,
         VOTE_POST,
         GET_POST,
         DELETE_POST,} from '../actions/posts'
-import {GET_COMMENTS, ADD_COMMENT, GET_COMMENT} from '../actions/comments'
+import {GET_COMMENTS, ADD_COMMENT, GET_COMMENT, DELETE_COMMENT} from '../actions/comments'
 import {SORT,
         OPEN_MODAL,
         CLOSE_MODAL,} from '../actions/utils'
@@ -76,7 +76,7 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
         case GET_ALL_POSTS:
             return {
                 ...state,
-                posts: posts.filter((item) => item.deleted === false),
+                posts,
             };
         case LOADING_POSTS:
             return {
@@ -126,7 +126,20 @@ function myPosts(state = {posts: [], loading: false, errorLoading: false}, actio
                 posts: updatedPosts
             };
         case DELETE_POST: {
-            const posts = state.posts.filter((item) => item.id !== action.id)
+            const {id} = action
+            const posts = state.posts.reduce((result, post) => {
+                if(post.id === id) {
+                    const deletedPost = {
+                        ...post,
+                        deleted: true,
+                    }
+                    result.push(deletedPost)
+                    return result
+                } else {
+                    result.push(post)
+                    return result
+                }
+            }, [])
             return {
                 ...state,
                 posts: posts,
@@ -169,6 +182,21 @@ function myComments(state = {commentsList: [], loading: false, errorLoading: fal
                 ...state,
                 commentsList: state.commentsList.push(comment),
             };
+        case DELETE_COMMENT: {
+            const commentsList = state.commentsList
+            const {id, parentId} = action.comment
+            let parent = commentsList.filter((obj) => obj.parentId === parentId)[0]
+            const updatedParent = {
+                ...parent,
+                comments: parent.comments.filter((comment) => comment.id !== id)
+            }
+            let newCommentsList = commentsList.filter((obj) => obj.parentId !== parentId)
+            newCommentsList.push(updatedParent)
+            return {
+                ...state,
+                commentsList: newCommentsList,
+            }
+        };
         case GET_COMMENT: {
             const {comment} = action
             const parent = comment.parentId

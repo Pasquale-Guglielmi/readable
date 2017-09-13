@@ -46,7 +46,8 @@ class PostsList extends Component {
                         : (loadingError)? <div>Error loading posts!</div>
                         :((posts.length === 0) && (!loading))? <div>No Posts Found!</div>
                         :<ul className="posts-list">
-                            {posts.sort((a, b) => {
+                            {posts.filter((post) => post.deleted !== true)
+                                .sort((a, b) => {
                                 switch(sort) {
                                     case "date":
                                         return b.timestamp - a.timestamp;
